@@ -3,455 +3,450 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Dashboard | ระบบประเมินผลการฝึกอบรม</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Thai:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<title>Admin Dashboard | ระบบประเมินผลการฝึกอบรม</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 <script>
   tailwind.config = {
-    theme: { extend: {
-      fontFamily: { sans: ['Sarabun', 'sans-serif'], serif: ['Noto Serif Thai', 'serif'] },
-      colors: { primary: { 500: '#b91c3c', 600: '#8B1538', 700: '#6B0F2A' } }
-    }}
+    theme: {
+      extend: {
+        fontFamily: {
+          sans: ['Sarabun', 'sans-serif']
+        }
+      }
+    }
   }
 </script>
 <style>
   body { font-family: 'Sarabun', sans-serif; }
-  .font-serif { font-family: 'Noto Serif Thai', serif; }
-  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-  .fade-in { animation: fadeIn 0.4s; }
+  .spinner { animation: spin 1s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
 </style>
 </head>
-<body class="bg-slate-50">
+<body class="bg-gray-50">
 
 <!-- ========== CONFIG ========== -->
 <script>
-  // 🔧 แก้ไข URL เป็น Apps Script Web App URL
- const API_URL = 'https://script.google.com/macros/s/AKfycbwbSFYyNAiYnem2xWybRCh1baobfLprA35_bk4595K6SNkHJVoD8L7j72EPXJM9Qcc/exec';
+// 🔧 แก้ไข URL และ Admin Key
+const API_URL = 'https://script.google.com/macros/s/AKfycbxoIt8oBEVK8SkWm9nk6a5hLs-hHjx-kRyYoXgc_36B2Y78dLiwoCb2MkT8iEbxWqEk/exec';
+const ADMIN_KEY = prompt('กรุณาใส่ Admin Key:');
+
+if (!ADMIN_KEY) {
+  alert('ต้องใส่ Admin Key เพื่อเข้าใช้งาน');
+  window.location.href = '/';
+}
 </script>
 
-<div id="app"></div>
+<!-- ========== HEADER ========== -->
+<header class="bg-gradient-to-r from-green-600 to-green-500 text-white shadow-lg">
+  <div class="max-w-7xl mx-auto px-6 py-5">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="text-sm opacity-90">ADMIN DASHBOARD</div>
+        <h1 class="text-2xl font-bold">ระบบวิเคราะห์ผลการประเมิน</h1>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="loadData()" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg flex items-center gap-2">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+          </svg>
+          รีเฟรช
+        </button>
+        <button onclick="window.location.href='/'" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg">
+          ออกจากระบบ
+        </button>
+      </div>
+    </div>
+  </div>
+</header>
 
-<script>
-const state = {
-  authenticated: false,
-  adminKey: '',
-  loading: false,
-  tab: 'overview',
-  stats: null,
-  rawData: { self: [], supervisor: [], satisfaction: [] },
-  error: null
-};
+<!-- ========== MAIN CONTENT ========== -->
+<main class="max-w-7xl mx-auto px-6 py-8">
+  
+  <!-- Loading State -->
+  <div id="loading" class="flex items-center justify-center py-20">
+    <div class="text-center">
+      <div class="spinner w-16 h-16 border-4 border-green-600 border-t-transparent rounded-full mx-auto mb-4"></div>
+      <p class="text-gray-600">กำลังโหลดข้อมูล...</p>
+    </div>
+  </div>
 
-function setState(updates) {
-  Object.assign(state, updates);
-  render();
-}
-
-async function login() {
-  const key = document.getElementById('adminKey').value.trim();
-  if (!key) {
-    setState({ error: 'กรุณาใส่รหัส Admin Key' });
-    return;
-  }
-
-  setState({ loading: true, error: null });
-
-  try {
-    // โหลดสถิติก่อน (ไม่ต้องใช้ key)
-    const statsRes = await fetch(`${API_URL}?action=getStats`);
-    const statsData = await statsRes.json();
-
-    if (statsData.status !== 'success') throw new Error('ไม่สามารถโหลดข้อมูลได้');
-
-    // ลองโหลดข้อมูลดิบด้วย key
-    const [selfRes, supRes, satRes] = await Promise.all([
-      fetch(`${API_URL}?action=getData&type=self&key=${encodeURIComponent(key)}`),
-      fetch(`${API_URL}?action=getData&type=supervisor&key=${encodeURIComponent(key)}`),
-      fetch(`${API_URL}?action=getData&type=satisfaction&key=${encodeURIComponent(key)}`)
-    ]);
-
-    const selfData = await selfRes.json();
-    const supData = await supRes.json();
-    const satData = await satRes.json();
-
-    if (selfData.status === 'error') {
-      throw new Error('รหัส Admin Key ไม่ถูกต้อง');
-    }
-
-    setState({
-      authenticated: true,
-      adminKey: key,
-      loading: false,
-      stats: statsData.stats,
-      rawData: {
-        self: selfData.data || [],
-        supervisor: supData.data || [],
-        satisfaction: satData.data || []
-      }
-    });
-
-    // Render charts after DOM updated
-    setTimeout(renderCharts, 100);
-  } catch (err) {
-    setState({ loading: false, error: err.message });
-  }
-}
-
-async function refreshData() {
-  if (!state.adminKey) return;
-  setState({ loading: true });
-
-  try {
-    const statsRes = await fetch(`${API_URL}?action=getStats`);
-    const statsData = await statsRes.json();
-
-    const [selfRes, supRes, satRes] = await Promise.all([
-      fetch(`${API_URL}?action=getData&type=self&key=${encodeURIComponent(state.adminKey)}`),
-      fetch(`${API_URL}?action=getData&type=supervisor&key=${encodeURIComponent(state.adminKey)}`),
-      fetch(`${API_URL}?action=getData&type=satisfaction&key=${encodeURIComponent(state.adminKey)}`)
-    ]);
-
-    setState({
-      loading: false,
-      stats: statsData.stats,
-      rawData: {
-        self: (await selfRes.json()).data || [],
-        supervisor: (await supRes.json()).data || [],
-        satisfaction: (await satRes.json()).data || []
-      }
-    });
-    setTimeout(renderCharts, 100);
-  } catch (err) {
-    setState({ loading: false, error: err.message });
-  }
-}
-
-function changeTab(tab) {
-  setState({ tab });
-  setTimeout(renderCharts, 100);
-}
-
-function exportCSV(type) {
-  const data = state.rawData[type];
-  if (!data || data.length === 0) {
-    alert('ไม่มีข้อมูลให้ส่งออก');
-    return;
-  }
-  const keys = Object.keys(data[0]);
-  const csv = [
-    keys.join(','),
-    ...data.map(row => keys.map(k => `"${(row[k] || '').toString().replace(/"/g, '""')}"`).join(','))
-  ].join('\n');
-  const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `${type}_${new Date().toISOString().slice(0,10)}.csv`;
-  a.click();
-}
-
-// ============ Charts ============
-let charts = {};
-
-function renderCharts() {
-  if (!state.stats) return;
-
-  // Destroy existing charts
-  Object.values(charts).forEach(c => c?.destroy());
-  charts = {};
-
-  // Batch Chart
-  const batchEl = document.getElementById('batchChart');
-  if (batchEl && state.stats.by_batch) {
-    charts.batch = new Chart(batchEl, {
-      type: 'bar',
-      data: {
-        labels: state.stats.by_batch.map(b => b.batch),
-        datasets: [
-          { label: 'ประเมินตนเอง', data: state.stats.by_batch.map(b => b.self), backgroundColor: '#8B1538', borderRadius: 4 },
-          { label: 'หัวหน้าประเมิน', data: state.stats.by_batch.map(b => b.supervisor), backgroundColor: '#D97706', borderRadius: 4 },
-          { label: 'ความพึงพอใจ', data: state.stats.by_batch.map(b => b.satisfaction), backgroundColor: '#059669', borderRadius: 4 }
-        ]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { position: 'bottom' } },
-        scales: { y: { beginAtZero: true } }
-      }
-    });
-  }
-
-  // Radar Chart
-  const radarEl = document.getElementById('radarChart');
-  if (radarEl && state.stats.averages) {
-    charts.radar = new Chart(radarEl, {
-      type: 'radar',
-      data: {
-        labels: ['ความรู้', 'ทักษะ', 'พฤติกรรม', 'ประสิทธิภาพ', 'ความพึงพอใจ'],
-        datasets: [{
-          label: 'คะแนนเฉลี่ย',
-          data: [
-            state.stats.averages.knowledge,
-            state.stats.averages.skill,
-            state.stats.averages.behavior,
-            state.stats.averages.efficiency,
-            state.stats.averages.satisfaction
-          ],
-          backgroundColor: 'rgba(139, 21, 56, 0.2)',
-          borderColor: '#8B1538',
-          borderWidth: 2,
-          pointBackgroundColor: '#8B1538'
-        }]
-      },
-      options: {
-        responsive: true, maintainAspectRatio: false,
-        scales: { r: { min: 0, max: 5, ticks: { stepSize: 1 } } }
-      }
-    });
-  }
-
-  // Knowledge detail chart
-  const knoEl = document.getElementById('knowledgeChart');
-  if (knoEl && state.rawData.self.length > 0) {
-    const labels = ['พรบ.จัดซื้อจัดจ้าง', 'ระเบียบคลัง', 'วิธีจัดซื้อ', 'e-GP', 'บริหารพัสดุ', 'ป.ป.ช.', 'ป้องกันทุจริต'];
-    const keys = ['k1','k2','k3','k4','k5','k6','k7'];
-    const scores = keys.map(k => {
-      const nums = state.rawData.self.map(r => Number(r[k])).filter(n => !isNaN(n));
-      return nums.length ? +(nums.reduce((s,n) => s+n, 0) / nums.length).toFixed(2) : 0;
-    });
-    charts.knowledge = new Chart(knoEl, {
-      type: 'bar',
-      data: {
-        labels,
-        datasets: [{ label: 'คะแนนเฉลี่ย', data: scores, backgroundColor: '#059669', borderRadius: 4 }]
-      },
-      options: {
-        indexAxis: 'y', responsive: true, maintainAspectRatio: false,
-        plugins: { legend: { display: false } },
-        scales: { x: { min: 0, max: 5 } }
-      }
-    });
-  }
-}
-
-// ============ Components ============
-
-function LoginPage() {
-  return `
-    <div class="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-slate-800 to-primary-600 p-6 fade-in">
-      <div class="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8">
-        <div class="text-center mb-8">
-          <div class="inline-flex w-16 h-16 rounded-full bg-primary-600 items-center justify-center mb-4">
-            <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/></svg>
+  <!-- Dashboard Content (Hidden initially) -->
+  <div id="dashboard" class="hidden">
+    
+    <!-- Summary Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <!-- Total Submissions -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-sm text-gray-500">จำนวนประเมินทั้งหมด</div>
+          <div class="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-blue-600" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/><path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+            </svg>
           </div>
-          <h1 class="font-serif text-2xl text-slate-900">Admin Dashboard</h1>
-          <p class="text-sm text-slate-500 mt-1">ระบบประเมินผลการฝึกอบรม</p>
-          <p class="text-xs text-slate-400 mt-2">สำนักการคลัง กรุงเทพมหานคร</p>
         </div>
+        <div id="total-count" class="text-3xl font-bold text-gray-900">0</div>
+        <div class="text-xs text-gray-400 mt-1">จาก 848 คน (0.0%)</div>
+      </div>
 
-        <div class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-slate-700 mb-2">Admin Key</label>
-            <input id="adminKey" type="password" placeholder="กรอกรหัสที่ตั้งไว้ใน Apps Script"
-              onkeydown="if(event.key==='Enter') login()"
-              class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-600/10 outline-none"/>
+      <!-- Self Assessment -->
+      <div class="bg-white rounded-xl p-6 shadow-sm border border-gray-100">
+        <div class="flex items-center justify-between mb-2">
+          <div class="text-sm text-gray-500">แบบประเมินตนเอง</div>
+          <div class="w-10 h-10 rounded-full bg-purple-100 flex items-center justify-center">
+            <svg class="w-5 h-5 text-purple-600" fill="currentColor" viewBox="0 0 20 20">
+              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+            </svg>
           </div>
+        </div>
+        <div id="self-count" class="text-3xl font-bold text-gray-900">0</div>
+        <div class="text-xs text-gray-400 mt-1">รายการ</div>
+      </div>
 
-          ${state.error ? `<div class="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm">${state.error}</div>` : ''}
+      <!-- KPI Output -->
+      <div class="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 shadow-lg text-white">
+        <div class="text-sm opacity-90 mb-2">KPI ผลผลิต (เป้า ≥๘๐%)</div>
+        <div id="kpi-output" class="text-4xl font-bold">0%</div>
+        <div id="kpi-output-detail" class="text-xs opacity-90 mt-1">ผ่านมาตรฐาน</div>
+      </div>
 
-          <button onclick="login()" ${state.loading?'disabled':''} class="w-full py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-40 flex items-center justify-center gap-2">
-            ${state.loading ? `
-              <div class="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div> กำลังเข้าสู่ระบบ...
-            ` : 'เข้าสู่ระบบ'}
+      <!-- KPI Outcome -->
+      <div class="bg-gradient-to-br from-pink-500 to-pink-600 rounded-xl p-6 shadow-lg text-white">
+        <div class="text-sm opacity-90 mb-2">KPI ผลลัพธ์ (เป้า ≥๘๐%)</div>
+        <div id="kpi-outcome" class="text-4xl font-bold">0%</div>
+        <div id="kpi-outcome-detail" class="text-xs opacity-90 mt-1">ผ่านมาตรฐาน</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="bg-white rounded-xl shadow-sm border border-gray-100 mb-8">
+      <div class="border-b border-gray-200">
+        <div class="flex space-x-8 px-6">
+          <button onclick="switchTab('overview')" class="tab-btn border-b-2 border-green-600 text-green-600 py-4 px-1 font-medium">
+            ภาพรวม
+          </button>
+          <button onclick="switchTab('dimensions')" class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1 font-medium">
+            วิเคราะห์ตามมิติ
+          </button>
+          <button onclick="switchTab('raw-data')" class="tab-btn border-b-2 border-transparent text-gray-500 hover:text-gray-700 py-4 px-1 font-medium">
+            รายการทดสอบ
           </button>
         </div>
-
-        <div class="mt-6 pt-6 border-t border-slate-100 text-xs text-slate-400 text-center">
-          รหัส Admin Key ตั้งได้จาก Google Sheets > เมนู "ระบบประเมินผล" > "ตั้งรหัส Admin Key"
-        </div>
-      </div>
-    </div>
-  `;
-}
-
-function Dashboard() {
-  const s = state.stats;
-  if (!s) return '<div class="p-8">กำลังโหลด...</div>';
-
-  const target = 848;
-  const responseRate = ((s.total_self / target) * 100).toFixed(1);
-
-  const kpiBg = (val) => val >= 80 ? 'from-emerald-500 to-emerald-600' : val >= 60 ? 'from-amber-500 to-amber-600' : 'from-rose-500 to-rose-600';
-
-  return `
-    <div class="min-h-screen bg-slate-50">
-      <!-- Header -->
-      <div class="bg-slate-900 text-white">
-        <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-          <div>
-            <div class="text-xs opacity-60 tracking-wider">ADMIN DASHBOARD</div>
-            <div class="font-serif text-lg">ระบบวิเคราะห์ผลการประเมิน</div>
-          </div>
-          <div class="flex items-center gap-2">
-            <button onclick="refreshData()" ${state.loading?'disabled':''} class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm flex items-center gap-1.5">
-              <svg class="w-4 h-4 ${state.loading?'animate-spin':''}" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
-              รีเฟรช
-            </button>
-            <button onclick="setState({authenticated: false, adminKey: ''})" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 rounded-lg text-sm">
-              ออกจากระบบ
-            </button>
-          </div>
-        </div>
       </div>
 
-      <div class="max-w-7xl mx-auto px-6 py-8">
-        <!-- KPI Cards -->
-        <div class="grid md:grid-cols-4 gap-4 mb-8">
-          <div class="bg-white rounded-xl p-5 border border-slate-100">
-            <div class="text-xs text-slate-500 mb-1">ผู้ตอบแบบประเมินตนเอง</div>
-            <div class="font-serif text-3xl text-slate-900">${s.total_self.toLocaleString()}</div>
-            <div class="text-xs text-slate-500 mt-1">จาก ${target} คน (${responseRate}%)</div>
-            <div class="mt-2 h-1.5 bg-slate-100 rounded-full overflow-hidden">
-              <div class="h-full bg-primary-600" style="width: ${Math.min(100, responseRate)}%"></div>
+      <!-- Tab Content -->
+      <div class="p-6">
+        <!-- Overview Tab -->
+        <div id="tab-overview">
+          <div class="grid md:grid-cols-2 gap-6">
+            <!-- Chart 1: จำนวนผู้ตอบแยกตามรุ่น -->
+            <div class="bg-gray-50 p-6 rounded-lg">
+              <h3 class="font-semibold text-gray-900 mb-4">จำนวนผู้ตอบแยกตามรุ่น</h3>
+              <canvas id="chart-by-batch"></canvas>
+            </div>
+
+            <!-- Chart 2: คะแนนเฉลี่ยแต่ละมิติ (Radar) -->
+            <div class="bg-gray-50 p-6 rounded-lg">
+              <h3 class="font-semibold text-gray-900 mb-4">คะแนนเฉลี่ยแต่ละมิติ (เต็ม ๕)</h3>
+              <canvas id="chart-radar"></canvas>
             </div>
           </div>
-          <div class="bg-white rounded-xl p-5 border border-slate-100">
-            <div class="text-xs text-slate-500 mb-1">หัวหน้าประเมิน</div>
-            <div class="font-serif text-3xl text-slate-900">${s.total_supervisor.toLocaleString()}</div>
-            <div class="text-xs text-slate-500 mt-1">รายการ</div>
-          </div>
-          <div class="bg-gradient-to-br ${kpiBg(s.kpi_output)} rounded-xl p-5 text-white">
-            <div class="text-xs opacity-80 mb-1">KPI ผลผลิต (เป้า ๘๐%)</div>
-            <div class="font-serif text-3xl">${s.kpi_output}%</div>
-            <div class="text-xs opacity-80 mt-1">${s.kpi_output >= 80 ? '✓ บรรลุเป้าหมาย' : 'ยังไม่บรรลุ'}</div>
-          </div>
-          <div class="bg-gradient-to-br ${kpiBg(s.kpi_outcome)} rounded-xl p-5 text-white">
-            <div class="text-xs opacity-80 mb-1">KPI ผลลัพธ์ (เป้า ๘๐%)</div>
-            <div class="font-serif text-3xl">${s.kpi_outcome}%</div>
-            <div class="text-xs opacity-80 mt-1">${s.kpi_outcome >= 80 ? '✓ บรรลุเป้าหมาย' : 'ยังไม่บรรลุ'}</div>
+
+          <!-- KPI Details -->
+          <div class="mt-6 grid md:grid-cols-2 gap-6">
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6">
+              <h4 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                </svg>
+                ผู้ผ่านเกณฑ์ (คะแนนเฉลี่ย ≥๓.๐๐)
+              </h4>
+              <div id="passed-list" class="text-sm text-green-700">กำลังโหลด...</div>
+            </div>
+
+            <div class="bg-red-50 border border-red-200 rounded-lg p-6">
+              <h4 class="font-semibold text-red-900 mb-3 flex items-center gap-2">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                </svg>
+                ยังไม่ผ่านเกณฑ์
+              </h4>
+              <div id="failed-list" class="text-sm text-red-700">กำลังโหลด...</div>
+            </div>
           </div>
         </div>
 
-        <!-- Tabs -->
-        <div class="bg-white rounded-xl border border-slate-100 overflow-hidden">
-          <div class="border-b border-slate-100 flex">
-            ${[
-              { id: 'overview', t: 'ภาพรวม' },
-              { id: 'detailed', t: 'วิเคราะห์รายมิติ' },
-              { id: 'responses', t: 'รายการตอบ' }
-            ].map(t => `
-              <button onclick="changeTab('${t.id}')" class="px-6 py-4 text-sm border-b-2 ${state.tab===t.id?'border-primary-600 text-primary-600':'border-transparent text-slate-500'}">${t.t}</button>
-            `).join('')}
+        <!-- Dimensions Tab -->
+        <div id="tab-dimensions" class="hidden">
+          <div class="text-center py-8 text-gray-500">
+            คะแนนเฉลี่ยแต่ละมิติ - มิติความรู้
           </div>
+        </div>
 
-          <div class="p-6">
-            ${state.tab === 'overview' ? `
-              <div class="grid md:grid-cols-2 gap-6">
-                <div>
-                  <h3 class="font-serif text-lg mb-4">จำนวนผู้ตอบแยกรุ่น</h3>
-                  <div style="height: 300px"><canvas id="batchChart"></canvas></div>
-                </div>
-                <div>
-                  <h3 class="font-serif text-lg mb-4">คะแนนเฉลี่ยแยกมิติ (เต็ม ๕)</h3>
-                  <div style="height: 300px"><canvas id="radarChart"></canvas></div>
-                </div>
-              </div>
-            ` : state.tab === 'detailed' ? `
-              <div>
-                <h3 class="font-serif text-lg mb-4">คะแนนเฉลี่ยรายข้อ - มิติความรู้</h3>
-                <div style="height: 300px"><canvas id="knowledgeChart"></canvas></div>
-
-                <div class="grid md:grid-cols-2 gap-6 mt-8">
-                  <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-5">
-                    <div class="text-xs text-emerald-700 mb-1">จุดแข็ง (คะแนนสูงสุด)</div>
-                    <div class="font-serif text-lg text-slate-900">${findMax(s.averages)}</div>
-                  </div>
-                  <div class="bg-rose-50 border border-rose-200 rounded-lg p-5">
-                    <div class="text-xs text-rose-700 mb-1">ควรปรับปรุง (คะแนนต่ำสุด)</div>
-                    <div class="font-serif text-lg text-slate-900">${findMin(s.averages)}</div>
-                  </div>
-                </div>
-              </div>
-            ` : `
-              <div class="flex justify-between items-center mb-4">
-                <div class="text-sm text-slate-600">
-                  Self: ${state.rawData.self.length} | Supervisor: ${state.rawData.supervisor.length} | Satisfaction: ${state.rawData.satisfaction.length}
-                </div>
-                <div class="flex gap-2">
-                  <button onclick="exportCSV('self')" class="px-3 py-1.5 bg-primary-600 text-white rounded text-xs">CSV: ตนเอง</button>
-                  <button onclick="exportCSV('supervisor')" class="px-3 py-1.5 bg-amber-600 text-white rounded text-xs">CSV: หัวหน้า</button>
-                  <button onclick="exportCSV('satisfaction')" class="px-3 py-1.5 bg-emerald-600 text-white rounded text-xs">CSV: ความพึงพอใจ</button>
-                </div>
-              </div>
-              <div class="overflow-x-auto">
-                <table class="w-full text-sm">
-                  <thead class="bg-slate-50 text-xs uppercase tracking-wider text-slate-600">
-                    <tr>
-                      <th class="px-4 py-3 text-left">วันที่</th>
-                      <th class="px-4 py-3 text-left">ชื่อ</th>
-                      <th class="px-4 py-3 text-left">สังกัด</th>
-                      <th class="px-4 py-3 text-left">รุ่น</th>
-                      <th class="px-4 py-3 text-right">คะแนนรวม</th>
-                      <th class="px-4 py-3 text-center">ผ่าน</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-100">
-                    ${state.rawData.self.slice(0, 50).map(r => `
-                      <tr class="hover:bg-slate-50">
-                        <td class="px-4 py-2 text-xs text-slate-500">${new Date(r.timestamp).toLocaleDateString('th-TH')}</td>
-                        <td class="px-4 py-2">${r.fullName||'-'}</td>
-                        <td class="px-4 py-2 text-slate-600">${r.department||'-'}</td>
-                        <td class="px-4 py-2 text-slate-600">${r.trainingBatch||'-'}</td>
-                        <td class="px-4 py-2 text-right font-medium">${Number(r.overall_avg||0).toFixed(2)}</td>
-                        <td class="px-4 py-2 text-center">
-                          <span class="px-2 py-0.5 rounded text-xs ${r.pass_kpi==='ผ่าน'?'bg-emerald-100 text-emerald-700':'bg-rose-100 text-rose-700'}">${r.pass_kpi||'-'}</span>
-                        </td>
-                      </tr>
-                    `).join('')}
-                  </tbody>
-                </table>
-                ${state.rawData.self.length === 0 ? '<div class="text-center py-12 text-slate-400">ยังไม่มีข้อมูล</div>' : ''}
-                ${state.rawData.self.length > 50 ? `<div class="text-center py-4 text-xs text-slate-400">แสดง 50 รายการแรก จากทั้งหมด ${state.rawData.self.length} รายการ (ดาวน์โหลด CSV เพื่อดูทั้งหมด)</div>` : ''}
-              </div>
-            `}
+        <!-- Raw Data Tab -->
+        <div id="tab-raw-data" class="hidden">
+          <div class="mb-4 flex justify-between items-center">
+            <div>
+              <label class="text-sm text-gray-600 mr-2">ประเภท:</label>
+              <select id="data-type-select" onchange="loadRawData(this.value)" class="px-3 py-2 border rounded-lg">
+                <option value="self">แบบประเมินตนเอง</option>
+                <option value="supervisor">แบบประเมินโดยผู้บังคับบัญชา</option>
+                <option value="satisfaction">แบบประเมินความพึงพอใจ</option>
+              </select>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="exportCSV('self')" class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                CSV: ตนเอง
+              </button>
+              <button onclick="exportCSV('supervisor')" class="px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                CSV: หัวหน้า
+              </button>
+              <button onclick="exportCSV('satisfaction')" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                </svg>
+                CSV: พึงพอใจ
+              </button>
+            </div>
+          </div>
+          <div id="raw-data-content" class="overflow-x-auto">
+            <p class="text-gray-500 text-center py-8">กรุณาเลือกประเภทข้อมูลที่ต้องการดู</p>
           </div>
         </div>
       </div>
     </div>
-  `;
+  </div>
+</main>
+
+<!-- ========== JAVASCRIPT ========== -->
+<script>
+let globalStats = null;
+let charts = {};
+
+// โหลดข้อมูลเมื่อเปิดหน้า
+window.addEventListener('load', () => {
+  loadData();
+});
+
+// โหลดข้อมูลจาก API
+async function loadData() {
+  try {
+    document.getElementById('loading').classList.remove('hidden');
+    document.getElementById('dashboard').classList.add('hidden');
+
+    const response = await fetch(`${API_URL}?action=getStats&key=${encodeURIComponent(ADMIN_KEY)}`);
+    const data = await response.json();
+
+    if (data.status !== 'success') {
+      throw new Error(data.message || 'ไม่สามารถโหลดข้อมูลได้');
+    }
+
+    globalStats = data.stats;
+    renderDashboard(data.stats);
+
+    document.getElementById('loading').classList.add('hidden');
+    document.getElementById('dashboard').classList.remove('hidden');
+  } catch (error) {
+    console.error('Error:', error);
+    alert('เกิดข้อผิดพลาด: ' + error.message);
+    document.getElementById('loading').innerHTML = `
+      <div class="text-center text-red-600">
+        <p class="text-xl font-semibold mb-2">เกิดข้อผิดพลาด</p>
+        <p>${error.message}</p>
+        <button onclick="loadData()" class="mt-4 px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+          ลองใหม่อีกครั้ง
+        </button>
+      </div>
+    `;
+  }
 }
 
-function findMax(avgs) {
-  const items = [
-    { k: 'ความรู้', v: avgs.knowledge },
-    { k: 'ทักษะ', v: avgs.skill },
-    { k: 'พฤติกรรม', v: avgs.behavior },
-    { k: 'ประสิทธิภาพ', v: avgs.efficiency },
-    { k: 'ความพึงพอใจ', v: avgs.satisfaction }
-  ];
-  const max = items.reduce((a, b) => (a.v > b.v) ? a : b);
-  return `${max.k} (${max.v})`;
+// แสดงผลข้อมูลใน Dashboard
+function renderDashboard(stats) {
+  // Summary Cards
+  document.getElementById('total-count').textContent = stats.total.all;
+  document.getElementById('self-count').textContent = stats.total.self;
+  
+  // KPI Cards
+  document.getElementById('kpi-output').textContent = stats.kpi.output + '%';
+  document.getElementById('kpi-output-detail').textContent = 
+    `${stats.kpi.selfPassed}/${stats.kpi.selfTotal} คน ผ่านมาตรฐาน`;
+  
+  document.getElementById('kpi-outcome').textContent = stats.kpi.outcome + '%';
+  document.getElementById('kpi-outcome-detail').textContent = 
+    `${stats.kpi.supPassed}/${stats.kpi.supTotal} คน ผ่านมาตรฐาน`;
+
+  // Charts
+  renderChartByBatch(stats.byBatch);
+  renderRadarChart(stats.averages);
+  
+  // Pass/Fail Lists
+  document.getElementById('passed-list').textContent = 
+    `ความพึงพอใจ (${stats.kpi.selfPassed} คน)`;
+  document.getElementById('failed-list').textContent = 
+    `ยังไม่มีข้อมูล (${stats.kpi.selfTotal - stats.kpi.selfPassed} คน)`;
 }
 
-function findMin(avgs) {
-  const items = [
-    { k: 'ความรู้', v: avgs.knowledge },
-    { k: 'ทักษะ', v: avgs.skill },
-    { k: 'พฤติกรรม', v: avgs.behavior },
-    { k: 'ประสิทธิภาพ', v: avgs.efficiency },
-    { k: 'ความพึงพอใจ', v: avgs.satisfaction }
-  ].filter(i => i.v > 0);
-  if (items.length === 0) return 'ยังไม่มีข้อมูล';
-  const min = items.reduce((a, b) => (a.v < b.v) ? a : b);
-  return `${min.k} (${min.v})`;
+// กราฟแท่ง: จำนวนผู้ตอบแยกตามรุ่น
+function renderChartByBatch(byBatch) {
+  const ctx = document.getElementById('chart-by-batch');
+  if (charts.batch) charts.batch.destroy();
+  
+  charts.batch = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: byBatch.map(b => b.batch),
+      datasets: [
+        {
+          label: 'ประเมินตนเอง',
+          data: byBatch.map(b => b.self),
+          backgroundColor: '#8b5cf6'
+        },
+        {
+          label: 'ประเมินโดยหัวหน้า',
+          data: byBatch.map(b => b.supervisor),
+          backgroundColor: '#f59e0b'
+        },
+        {
+          label: 'ความพึงพอใจ',
+          data: byBatch.map(b => b.satisfaction),
+          backgroundColor: '#10b981'
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      scales: { y: { beginAtZero: true } }
+    }
+  });
 }
 
-function render() {
-  document.getElementById('app').innerHTML = state.authenticated ? Dashboard() : LoginPage();
+// กราฟ Radar: คะแนนเฉลี่ยแต่ละมิติ
+function renderRadarChart(averages) {
+  const ctx = document.getElementById('chart-radar');
+  if (charts.radar) charts.radar.destroy();
+  
+  charts.radar = new Chart(ctx, {
+    type: 'radar',
+    data: {
+      labels: ['ความรู้', 'ผลการปฏิบัติ', 'ความพึงพอใจ'],
+      datasets: [{
+        label: 'คะแนนเฉลี่ย',
+        data: [averages.knowledge, averages.performance, averages.satisfaction],
+        backgroundColor: 'rgba(34, 197, 94, 0.2)',
+        borderColor: 'rgb(34, 197, 94)',
+        pointBackgroundColor: 'rgb(34, 197, 94)'
+      }]
+    },
+    options: {
+      scales: { r: { min: 0, max: 5 } }
+    }
+  });
 }
 
-render();
+// สลับ Tab
+function switchTab(tabName) {
+  // Hide all
+  document.querySelectorAll('[id^="tab-"]').forEach(el => el.classList.add('hidden'));
+  
+  // Show selected
+  document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+  
+  // Update button styles
+  document.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.classList.remove('border-green-600', 'text-green-600');
+    btn.classList.add('border-transparent', 'text-gray-500');
+  });
+  event.target.classList.add('border-green-600', 'text-green-600');
+  event.target.classList.remove('border-transparent', 'text-gray-500');
+}
+
+// โหลดข้อมูลดิบ
+async function loadRawData(type) {
+  const container = document.getElementById('raw-data-content');
+  container.innerHTML = '<p class="text-center py-8 text-gray-500">กำลังโหลด...</p>';
+  
+  try {
+    const response = await fetch(`${API_URL}?action=getData&type=${type}&key=${encodeURIComponent(ADMIN_KEY)}`);
+    const result = await response.json();
+    
+    if (result.status !== 'success') throw new Error(result.message);
+    
+    const data = result.data;
+    if (data.length === 0) {
+      container.innerHTML = '<p class="text-center py-8 text-gray-500">ยังไม่มีข้อมูล</p>';
+      return;
+    }
+    
+    // สร้างตาราง
+    const headers = Object.keys(data[0]);
+    let html = '<table class="min-w-full divide-y divide-gray-200"><thead class="bg-gray-50"><tr>';
+    headers.forEach(h => {
+      html += `<th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">${h}</th>`;
+    });
+    html += '</tr></thead><tbody class="bg-white divide-y divide-gray-200">';
+    
+    data.forEach(row => {
+      html += '<tr>';
+      headers.forEach(h => {
+        html += `<td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">${row[h] || ''}</td>`;
+      });
+      html += '</tr>';
+    });
+    
+    html += '</tbody></table>';
+    container.innerHTML = html;
+  } catch (error) {
+    container.innerHTML = `<p class="text-center py-8 text-red-500">เกิดข้อผิดพลาด: ${error.message}</p>`;
+  }
+}
+
+// Export CSV
+async function exportCSV(type) {
+  try {
+    const response = await fetch(`${API_URL}?action=getData&type=${type}&key=${encodeURIComponent(ADMIN_KEY)}`);
+    const result = await response.json();
+    
+    if (result.status !== 'success') throw new Error(result.message);
+    
+    const data = result.data;
+    if (data.length === 0) {
+      alert('ไม่มีข้อมูลให้ Export');
+      return;
+    }
+    
+    // สร้าง CSV
+    const headers = Object.keys(data[0]);
+    let csv = headers.join(',') + '\n';
+    
+    data.forEach(row => {
+      const values = headers.map(h => {
+        const val = row[h] || '';
+        return `"${String(val).replace(/"/g, '""')}"`;
+      });
+      csv += values.join(',') + '\n';
+    });
+    
+    // ดาวน์โหลด
+    const blob = new Blob(['\ufeff' + csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `evaluation_${type}_${new Date().toISOString().slice(0,10)}.csv`;
+    link.click();
+  } catch (error) {
+    alert('เกิดข้อผิดพลาด: ' + error.message);
+  }
+}
 </script>
 
 </body>
