@@ -110,7 +110,11 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbxBtu4o_pzyTyy3PE7gzLCuJJ4bLErku_ueMCVBJrPuuTMZ5TB_dkX5RLnEUESpSB-S/exec';
   
   // 🎯 ตัวเลือกรุ่นการฝึกอบรม
-  const BATCHES = ['รุ่นที่ ๑', 'รุ่นที่ ๒', 'รุ่นที่ ๓', 'รุ่นที่ ๔', 'รุ่นที่ ๕'];
+  const BATCHES = ['รุ่นที่ ๑', 'รุ่นที่ ๒', 'รุ่นที่ ๓', 'รุ่นที่ ๔',];
+  const COURSES = [
+  { value: 'หัวหน้าเจ้าหน้าที่', batches: ['รุ่นที่ ๑'] },
+  { value: 'เจ้าหน้าที่', batches: ['รุ่นที่ ๒', 'รุ่นที่ ๓', 'รุ่นที่ ๔'] }
+];
   
   // 📅 ข้อมูลการฝึกอบรม
   const TRAINING_INFO = {
@@ -215,6 +219,23 @@ function updateField(key, value) {
 function updateFieldFromInput(key, value) {
   // เก็บค่าไว้ใน state โดยไม่ render ใหม่ (แก้ปัญหากระพริบ)
   state.formData[key] = value;
+}
+// ฟังก์ชันอัพเดทรุ่นตามหลักสูตร
+function updateBatchOptions() {
+  const course = state.formData.course || '';
+  const courseData = COURSES.find(c => c.value === course);
+  
+  if (courseData) {
+    state.availableBatches = courseData.batches;
+    // ถ้ารุ่นที่เลือกไว้ไม่อยู่ในตัวเลือกใหม่ ให้ล้างค่า
+    if (state.formData.trainingBatch && !courseData.batches.includes(state.formData.trainingBatch)) {
+      state.formData.trainingBatch = '';
+    }
+  } else {
+    state.availableBatches = [];
+  }
+  
+  render();
 }
 
 function formatThaiDate() {
@@ -498,152 +519,266 @@ function SelfAssessment() {
 
   function canNext() {
     if (step === 1) {
-      return d.fullName && d.idpHash && d.position && d.level && d.department && d.division && d.email && d.phone && d.course && d.batch;
+      return d.fullName && d.position && d.level && 
+             d.department && d.division && d.course && d.trainingBatch;
     }
     if (step === 2) {
-      return ['k1_before','k1_after','k2_before','k2_after','k3_before','k3_after'].every(k => d[k]);
+  return ['k1_before','k1_after','k2_before','k2_after',
+          'k3_before','k3_after','k4_before','k4_after'].every(k => d[k]);
     }
     if (step === 3) {
       return d.application && d.application.length >= 50;
     }
     if (step === 4) {
-      return d.overallComment && d.overallComment.length >= 20;
-    }
-    return false;
+  return true; // ✅ ส่งได้เสมอ ไม่บังคับกรอก
   }
 
   let content = '';
   
   if (step === 1) {
-    content = `
-      <h2 class="text-2xl font-serif font-semibold text-slate-900 mb-2">ข้อมูลส่วนบุคคล</h2>
-      <p class="text-slate-600 mb-6">กรุณากรอกข้อมูลให้ครบถ้วน</p>
-      <div class="grid md:grid-cols-2 gap-4">
-        <input type="text" placeholder="ชื่อ-นามสกุล *" value="${d.fullName||''}" oninput="updateFieldFromInput('fullName', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="text" placeholder="เลขประจำตัวประชาชน (Hash) *" value="${d.idpHash||''}" oninput="updateFieldFromInput('idpHash', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="text" placeholder="ตำแหน่ง *" value="${d.position||''}" oninput="updateFieldFromInput('position', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <select onchange="updateField('level', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white">
-          <option value="">-- ระดับตำแหน่ง --</option>
-          ${['ปฏิบัติการ', 'ชำนาญการ', 'ชำนาญการพิเศษ', 'เชี่ยวชาญ', 'อื่นๆ'].map(v => `<option ${d.level===v?'selected':''}>${v}</option>`).join('')}
-        </select>
-        <input type="text" placeholder="สังกัดสำนัก/กอง *" value="${d.department||''}" oninput="updateFieldFromInput('department', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="text" placeholder="สังกัดฝ่าย/กลุ่ม *" value="${d.division||''}" oninput="updateFieldFromInput('division', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="email" placeholder="อีเมล *" value="${d.email||''}" oninput="updateFieldFromInput('email', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="tel" placeholder="เบอร์โทรศัพท์ *" value="${d.phone||''}" oninput="updateFieldFromInput('phone', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        <input type="text" placeholder="หลักสูตรที่เข้ารับการอบรม *" value="${d.course||''}" oninput="updateFieldFromInput('course', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none md:col-span-2"/>
-        <select onchange="updateField('batch', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white">
-          <option value="">-- รุ่นที่ *</option>
-          ${BATCHES.map(v => `<option ${d.batch===v?'selected':''}>${v}</option>`).join('')}
-        </select>
-      </div>
-    `;
-  }
+    const step1Fields = `
+  <div class="space-y-6">
+    <!-- ชื่อ-นามสกุล -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ชื่อ-นามสกุล <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.fullName || ''}"
+        oninput="updateFieldFromInput('fullName', this.value)"
+        placeholder="กรุณาระบุชื่อ-นามสกุล"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- ตำแหน่ง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ตำแหน่ง <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.position || ''}"
+        oninput="updateFieldFromInput('position', this.value)"
+        placeholder="เช่น นักวิเคราะห์นโยบายและแผน"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- ระดับตำแหน่ง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ระดับตำแหน่ง <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('level', this.value)"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      >
+        <option value="">-- เลือกระดับ --</option>
+        ${['ปฏิบัติการ', 'ชำนาญการ', 'ชำนาญการพิเศษ', 'เชี่ยวชาญ', 'อาวุโส'].map(level => `
+          <option value="${level}" ${d.level === level ? 'selected' : ''}>${level}</option>
+        `).join('')}
+      </select>
+    </div>
+
+    <!-- สังกัดสำนัก/กอง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        สังกัดสำนัก/กอง <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.department || ''}"
+        oninput="updateFieldFromInput('department', this.value)"
+        placeholder="เช่น สำนักการคลัง"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- สังกัดฝ่าย/กลุ่ม -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        สังกัดฝ่าย/กลุ่ม <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.division || ''}"
+        oninput="updateFieldFromInput('division', this.value)"
+        placeholder="เช่น กลุ่มงานบริหารทั่วไป"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- หลักสูตร (Dropdown) -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('course', this.value); updateBatchOptions();"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      >
+        <option value="">-- เลือกหลักสูตร --</option>
+        ${COURSES.map(c => `
+          <option value="${c.value}" ${d.course === c.value ? 'selected' : ''}>${c.value}</option>
+        `).join('')}
+      </select>
+    </div>
+
+    <!-- รุ่นที่ (ขึ้นกับหลักสูตร) -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        รุ่นที่เข้ารับการอบรม <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('trainingBatch', this.value)"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+        ${!d.course ? 'disabled' : ''}
+      >
+        <option value="">-- เลือกรุ่น --</option>
+        ${(state.availableBatches || []).map(b => `
+          <option value="${b}" ${d.trainingBatch === b ? 'selected' : ''}>${b}</option>
+        `).join('')}
+      </select>
+      ${!d.course ? '<p class="text-xs text-amber-600 mt-1">⚠ กรุณาเลือกหลักสูตรก่อน</p>' : ''}
+    </div>
+  </div>
+`;
   
   else if (step === 2) {
-    const items = [
-      { k: 'k1', label: '๑. ความรู้เกี่ยวกับ พ.ร.บ. การจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. ๒๕๖๐' },
-      { k: 'k2', label: '๒. ความรู้เกี่ยวกับระเบียบกระทรวงการคลังว่าด้วยการจัดซื้อจัดจ้างฯ พ.ศ. ๒๕๖๐' },
-      { k: 'k3', label: '๓. ความรู้เกี่ยวกับการจัดทำแผนการจัดซื้อจัดจ้าง และ TOR' }
-    ];
-    content = `
-      <h2 class="text-2xl font-serif font-semibold text-slate-900 mb-2">การประเมินความรู้</h2>
-      <p class="text-slate-600 mb-6">เปรียบเทียบความรู้ของท่านก่อนและหลังการอบรม</p>
-      <div class="space-y-8">
-        ${items.map(it => `
-          <div class="p-6 bg-slate-50 rounded-xl border border-slate-200">
-            <label class="block text-slate-800 font-medium mb-4">${it.label}</label>
-            <div class="grid md:grid-cols-2 gap-6">
-              <div>
-                <div class="text-sm text-slate-600 mb-3 font-medium">ก่อนการอบรม</div>
-                ${RatingScale(`${it.k}_before`, d[`${it.k}_before`] || 0)}
-              </div>
-              <div>
-                <div class="text-sm text-slate-600 mb-3 font-medium">หลังการอบรม</div>
-                ${RatingScale(`${it.k}_after`, d[`${it.k}_after`] || 0)}
-              </div>
+    const step2Content = `
+  <div class="space-y-8">
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
+      <p class="text-sm text-blue-900">
+        <strong>คำชี้แจง:</strong> กรุณาประเมินความรู้ของท่านก่อนและหลังการฝึกอบรม โดยให้คะแนน ๑-๕
+      </p>
+    </div>
+
+    ${[
+      {
+        id: 1,
+        text: 'ท่านมีความรู้ ความเข้าใจเกี่ยวกับ พ.ร.บ. การจัดซื้อจัดจ้าง พ.ศ. ๒๕๖๐ และระเบียบกระทรวงการคลัง ว่าด้วยการจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. ๒๕๖๐'
+      },
+      {
+        id: 2,
+        text: 'ท่านได้ซักถามข้อสงสัย หรือรับฟังข้อสงสัยที่หน่วยงานอื่นถาม ใช้เป็นแนวทางให้กับตนเองมากขึ้นกว่าเดิม'
+      },
+      {
+        id: 3,
+        text: 'ท่านได้เรียนรู้วิธีการปฏิบัติงานของหน่วยอื่นๆ และได้ข้อควรระวังขั้นตอนการจัดซื้อจัดจ้างเพิ่มขึ้นจากการอบรม'
+      },
+      {
+        id: 4,
+        text: 'ท่านได้เรียนรู้ข้อผิดพลาด ข้อควรระวัง หรือแนวทางปฏิบัติที่ทำให้การจัดซื้อจัดจ้างของท่านในบางขั้นตอนรัดกุมมากยิ่งขึ้น'
+      }
+    ].map(q => `
+      <div class="bg-white border border-gray-200 rounded-lg p-6">
+        <div class="font-medium text-gray-900 mb-6">
+          ${q.id}. ${q.text}
+        </div>
+        
+        <div class="grid md:grid-cols-2 gap-6">
+          <!-- ก่อนอบรม -->
+          <div>
+            <div class="text-sm font-medium text-gray-600 mb-3">ก่อนการฝึกอบรม</div>
+            <div class="flex justify-center gap-2">
+              ${[1,2,3,4,5].map(v => `
+                <label class="flex flex-col items-center gap-1 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="k${q.id}_before" 
+                    value="${v}"
+                    ${d['k'+q.id+'_before'] == v ? 'checked' : ''}
+                    onchange="updateFieldFromInput('k${q.id}_before', this.value)"
+                    class="w-5 h-5 text-green-600"
+                  />
+                  <span class="text-xs">${v}</span>
+                </label>
+              `).join('')}
             </div>
           </div>
-        `).join('')}
+
+          <!-- หลังอบรม -->
+          <div>
+            <div class="text-sm font-medium text-gray-600 mb-3">หลังการฝึกอบรม</div>
+            <div class="flex justify-center gap-2">
+              ${[1,2,3,4,5].map(v => `
+                <label class="flex flex-col items-center gap-1 cursor-pointer">
+                  <input 
+                    type="radio" 
+                    name="k${q.id}_after" 
+                    value="${v}"
+                    ${d['k'+q.id+'_after'] == v ? 'checked' : ''}
+                    onchange="updateFieldFromInput('k${q.id}_after', this.value)"
+                    class="w-5 h-5 text-green-600"
+                  />
+                  <span class="text-xs">${v}</span>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+        </div>
       </div>
-    `;
+    `).join('')}
+  </div>
+`;
   }
   
   else if (step === 3) {
-    content = `
-      <h2 class="text-2xl font-serif font-semibold text-slate-900 mb-2">การนำความรู้ไปใช้</h2>
-      <p class="text-slate-600 mb-6">อธิบายการนำความรู้จากการอบรมไปประยุกต์ใช้ในการปฏิบัติงาน</p>
-      <div class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium text-slate-800 mb-2">
-            ๓. ท่านได้นำความรู้ที่ได้จากการฝึกอบรมไปประยุกต์ใช้ในการปฏิบัติงานอย่างไร 
-            <span class="text-primary-600">(กรุณาอธิบายอย่างน้อย ๕๐ ตัวอักษร)</span>
-            <span class="text-red-500">*</span>
-          </label>
-          <textarea 
-            rows="6" 
-            oninput="updateFieldFromInput('application', this.value); document.getElementById('charCount').textContent = this.value.length;" 
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-            placeholder="ตัวอย่าง: ได้นำความรู้เรื่อง... ไปปรับปรุงกระบวนการจัดซื้อจัดจ้าง โดย..."
-          >${d.application||''}</textarea>
-          <div class="flex justify-between items-center mt-2">
-            <div class="text-xs ${(d.application||'').length >= 50 ? 'text-emerald-600' : 'text-amber-600'}">
-              ${(d.application||'').length >= 50 ? '✓ ครบตามเกณฑ์' : '⚠ กรุณากรอกอย่างน้อย ๕๐ ตัวอักษร'}
-            </div>
-            <div class="text-xs text-slate-400">
-              <span id="charCount" class="font-semibold ${(d.application||'').length >= 50 ? 'text-emerald-600' : 'text-slate-600'}">${(d.application||'').length}</span> / 50 ตัวอักษร
-            </div>
-          </div>
-        </div>
+    const step3Content = `
+  <div class="space-y-6">
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+      <div class="font-medium text-gray-900 mb-4">
+        ในการฝึกอบรมครั้งนี้ ท่านได้ความรู้ แนวทางการปฏิบัติการจัดซื้อจัดจ้าง การบริหารพัสดุ และการบริหารความเสี่ยง การป้องกันการทุจริต กลับไปไม่มากก็น้อย
       </div>
-    `;
+      
+      <div class="space-y-2">
+        ${[
+          'เห็นด้วยอย่างยิ่ง',
+          'เห็นด้วย',
+          'เฉยๆ',
+          'ไม่ได้อะไรกลับมาเลย',
+          'เป็นเรื่องที่รู้อยู่แล้ว'
+        ].map(option => `
+          <label class="flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer hover:bg-green-50 hover:border-green-500 transition-all ${d.a1 === option ? 'bg-green-50 border-green-500' : 'border-gray-200'}">
+            <input 
+              type="radio" 
+              name="a1" 
+              value="${option}"
+              ${d.a1 === option ? 'checked' : ''}
+              onchange="updateFieldFromInput('a1', this.value)"
+              class="w-5 h-5 text-green-600"
+            />
+            <span class="font-medium">${option}</span>
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  </div>
+`;
   }
   
   else if (step === 4) {
-    content = `
-      <h2 class="text-2xl font-serif font-semibold text-slate-900 mb-2">ความคิดเห็นและข้อเสนอแนะ</h2>
-      <p class="text-slate-600 mb-6">แบ่งปันข้อคิดเห็นเพื่อพัฒนาการจัดอบรมในครั้งต่อไป</p>
-      <div class="space-y-6">
-        <div>
-          <label class="block text-sm font-medium text-slate-800 mb-2">๔.๑ จุดเด่น/การพัฒนาที่ชัดเจนหลังผ่านการฝึกอบรม</label>
-          <textarea 
-            rows="3" 
-            oninput="updateFieldFromInput('improvements', this.value)" 
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-            placeholder="ตัวอย่าง: มีความมั่นใจในการจัดทำ TOR มากขึ้น..."
-          >${d.improvements||''}</textarea>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-800 mb-2">๔.๒ หัวข้อที่ต้องการให้จัดฝึกอบรมเพิ่มเติมในรุ่นต่อไป</label>
-          <textarea 
-            rows="3" 
-            oninput="updateFieldFromInput('furtherTraining', this.value)" 
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-            placeholder="ตัวอย่าง: การจัดทำแผนการจัดซื้อจัดจ้างประจำปี..."
-          >${d.furtherTraining||''}</textarea>
-        </div>
-        <div>
-          <label class="block text-sm font-medium text-slate-800 mb-2">
-            ๔.๓ ข้อคิดเห็นภาพรวมต่อการฝึกอบรม 
-            <span class="text-primary-600">(อย่างน้อย ๒๐ ตัวอักษร)</span>
-            <span class="text-red-500">*</span>
-          </label>
-          <textarea 
-            rows="4" 
-            oninput="updateFieldFromInput('overallComment', this.value); document.getElementById('charCount2').textContent = this.value.length;" 
-            class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-            placeholder="แบ่งปันความคิดเห็นและข้อเสนอแนะของท่าน..."
-          >${d.overallComment||''}</textarea>
-          <div class="flex justify-between items-center mt-2">
-            <div class="text-xs ${(d.overallComment||'').length >= 20 ? 'text-emerald-600' : 'text-amber-600'}">
-              ${(d.overallComment||'').length >= 20 ? '✓ ครบตามเกณฑ์' : '⚠ กรุณากรอกอย่างน้อย ๒๐ ตัวอักษร'}
-            </div>
-            <div class="text-xs text-slate-400">
-              <span id="charCount2" class="font-semibold ${(d.overallComment||'').length >= 20 ? 'text-emerald-600' : 'text-slate-600'}">${(d.overallComment||'').length}</span> / 20 ตัวอักษร
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
+    const step4Content = `
+  <div class="space-y-6">
+    <div class="bg-white border border-gray-200 rounded-lg p-6">
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span>
+      </label>
+      <textarea
+        value="${d.suggestions || ''}"
+        oninput="updateFieldFromInput('suggestions', this.value)"
+        placeholder="กรุณาระบุข้อเสนอแนะเพิ่มเติม (ไม่บังคับกรอก)"
+        rows="6"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+      ></textarea>
+      <p class="text-xs text-gray-500 mt-2">
+        💡 ท่านสามารถข้ามขั้นตอนนี้ได้ หากไม่มีข้อเสนอแนะ
+      </p>
+    </div>
+  </div>
+`;
   }
 
   const navigation = `
@@ -725,72 +860,115 @@ function SelfAssessment() {
 // ============================================================
 // Supervisor Assessment Form
 // ============================================================
-function SupervisorAssessment() {
-  const d = state.formData;
-  const step = state.step;
+const step1Fields = `
+  <div class="space-y-6">
+    <!-- ชื่อ-นามสกุล -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ชื่อ-นามสกุล <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.fullName || ''}"
+        oninput="updateFieldFromInput('fullName', this.value)"
+        placeholder="กรุณาระบุชื่อ-นามสกุล"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
 
-  function canNext() {
-    if (step === 1) {
-      return d.supervisorName && d.supervisorPosition && d.traineeFullName && d.traineePosition && d.department && d.email && d.phone && d.batch;
-    }
-    if (step === 2) {
-      return ['k1','k2','k3'].every(k => d[k]);
-    }
-    if (step === 3) {
-      return d.behavior && d.behavior.length >= 50;
-    }
-    if (step === 4) {
-      return d.overallComment && d.overallComment.length >= 20;
-    }
-    return false;
-  }
+    <!-- ตำแหน่ง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ตำแหน่ง <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.position || ''}"
+        oninput="updateFieldFromInput('position', this.value)"
+        placeholder="เช่น นักวิเคราะห์นโยบายและแผน"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
 
-  let content = '';
-  
-  if (step === 1) {
-    content = `
-      <h2 class="text-2xl font-serif font-semibold text-slate-900 mb-2">ข้อมูลผู้ประเมิน</h2>
-      <p class="text-slate-600 mb-6">ข้อมูลผู้บังคับบัญชาและผู้ถูกประเมิน</p>
-      <div class="space-y-6">
-        <div class="p-5 bg-blue-50 border border-blue-200 rounded-xl">
-          <h3 class="font-semibold text-blue-900 mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-            </svg>
-            ข้อมูลผู้บังคับบัญชา (ผู้ประเมิน)
-          </h3>
-          <div class="grid md:grid-cols-2 gap-4">
-            <input type="text" placeholder="ชื่อ-นามสกุล *" value="${d.supervisorName||''}" oninput="updateFieldFromInput('supervisorName', this.value)" class="px-4 py-3 border border-blue-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white"/>
-            <input type="text" placeholder="ตำแหน่ง *" value="${d.supervisorPosition||''}" oninput="updateFieldFromInput('supervisorPosition', this.value)" class="px-4 py-3 border border-blue-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white"/>
-          </div>
-        </div>
-        
-        <div class="p-5 bg-amber-50 border border-amber-200 rounded-xl">
-          <h3 class="font-semibold text-amber-900 mb-4 flex items-center gap-2">
-            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
-            </svg>
-            ข้อมูลผู้ถูกประเมิน (ผู้เข้ารับการอบรม)
-          </h3>
-          <div class="grid md:grid-cols-2 gap-4">
-            <input type="text" placeholder="ชื่อ-นามสกุล *" value="${d.traineeFullName||''}" oninput="updateFieldFromInput('traineeFullName', this.value)" class="px-4 py-3 border border-amber-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white"/>
-            <input type="text" placeholder="ตำแหน่ง *" value="${d.traineePosition||''}" oninput="updateFieldFromInput('traineePosition', this.value)" class="px-4 py-3 border border-amber-300 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white"/>
-          </div>
-        </div>
-        
-        <div class="grid md:grid-cols-2 gap-4">
-          <input type="text" placeholder="สังกัด *" value="${d.department||''}" oninput="updateFieldFromInput('department', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-          <select onchange="updateField('batch', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white">
-            <option value="">-- รุ่นที่ *</option>
-            ${BATCHES.map(v => `<option ${d.batch===v?'selected':''}>${v}</option>`).join('')}
-          </select>
-          <input type="email" placeholder="อีเมล *" value="${d.email||''}" oninput="updateFieldFromInput('email', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-          <input type="tel" placeholder="เบอร์โทรศัพท์ *" value="${d.phone||''}" oninput="updateFieldFromInput('phone', this.value)" class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"/>
-        </div>
-      </div>
-    `;
-  }
-  
+    <!-- ระดับตำแหน่ง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        ระดับตำแหน่ง <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('level', this.value)"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      >
+        <option value="">-- เลือกระดับ --</option>
+        ${['ปฏิบัติการ', 'ชำนาญการ', 'ชำนาญการพิเศษ', 'เชี่ยวชาญ', 'อาวุโส'].map(level => `
+          <option value="${level}" ${d.level === level ? 'selected' : ''}>${level}</option>
+        `).join('')}
+      </select>
+    </div>
+
+    <!-- สังกัดสำนัก/กอง -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        สังกัดสำนัก/กอง <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.department || ''}"
+        oninput="updateFieldFromInput('department', this.value)"
+        placeholder="เช่น สำนักการคลัง"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- สังกัดฝ่าย/กลุ่ม -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        สังกัดฝ่าย/กลุ่ม <span class="text-red-500">*</span>
+      </label>
+      <input
+        type="text"
+        value="${d.division || ''}"
+        oninput="updateFieldFromInput('division', this.value)"
+        placeholder="เช่น กลุ่มงานบริหารทั่วไป"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      />
+    </div>
+
+    <!-- หลักสูตร (Dropdown) -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('course', this.value); updateBatchOptions();"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+      >
+        <option value="">-- เลือกหลักสูตร --</option>
+        ${COURSES.map(c => `
+          <option value="${c.value}" ${d.course === c.value ? 'selected' : ''}>${c.value}</option>
+        `).join('')}
+      </select>
+    </div>
+
+    <!-- รุ่นที่ (ขึ้นกับหลักสูตร) -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-2">
+        รุ่นที่เข้ารับการอบรม <span class="text-red-500">*</span>
+      </label>
+      <select 
+        onchange="updateFieldFromInput('trainingBatch', this.value)"
+        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+        ${!d.course ? 'disabled' : ''}
+      >
+        <option value="">-- เลือกรุ่น --</option>
+        ${(state.availableBatches || []).map(b => `
+          <option value="${b}" ${d.trainingBatch === b ? 'selected' : ''}>${b}</option>
+        `).join('')}
+      </select>
+      ${!d.course ? '<p class="text-xs text-amber-600 mt-1">⚠ กรุณาเลือกหลักสูตรก่อน</p>' : ''}
+    </div>
+  </div>
+`;
   else if (step === 2) {
     const items = [
       { k: 'k1', label: '๑. ความรู้ความเข้าใจในเนื้อหาการฝึกอบรม' },
@@ -967,131 +1145,124 @@ function SupervisorAssessment() {
 // Satisfaction Form
 // ============================================================
 function SatisfactionForm() {
-  const d = state.formData;
-  const items = [
-    { k: 's1', t: '๑. เนื้อหาของหลักสูตรมีความเหมาะสมและตรงความต้องการ' },
-    { k: 's2', t: '๒. วิทยากรมีความรู้ความเชี่ยวชาญในเนื้อหาที่บรรยาย' },
-    { k: 's3', t: '๓. วิธีการบรรยายและการถ่ายทอดของวิทยากรมีความเข้าใจง่าย' },
-    { k: 's4', t: '๔. เอกสารประกอบการอบรมมีความครบถ้วนและเข้าใจง่าย' },
-    { k: 's5', t: '๕. ระยะเวลาในการอบรมมีความเหมาะสม' },
-    { k: 's6', t: `๖. สถานที่จัดอบรมมีความเหมาะสม (${TRAINING_INFO.venue})` },
-    { k: 's7', t: '๗. การบริการและการต้อนรับของเจ้าหน้าที่' },
-    { k: 's8', t: '๘. ความพึงพอใจภาพรวมต่อการฝึกอบรม' }
+  const { step, formData: d } = state;
+
+  const questions = [
+    '๑. เนื้อหาการฝึกอบรมมีความเหมาะสม',
+    '๒. วิทยากรมีความรู้ความสามารถ',
+    '๓. การบรรยายของวิทยากรทำให้เข้าใจได้ง่าย',
+    '๔. เอกสารประกอบการฝึกอบรมมีความครบถ้วน',
+    '๕. ระยะเวลาในการฝึกอบรมมีความเหมาะสม',
+    '๖. สถานที่ฝึกอบรมมีความเหมาะสม',
+    '๗. การบริการและอำนวยความสะดวกเป็นอย่างดี',
+    '๘. ความพึงพอใจโดยภาพรวมต่อการฝึกอบรม'
   ];
 
-  const canSubmit = d.fullName && d.department && d.batch && items.every(it => d[it.k]);
+  const renderRatingScale = (questionNum) => {
+    const ratings = [
+      { value: 1, label: '๑', sublabel: 'น้อยที่สุด' },
+      { value: 2, label: '๒', sublabel: '' },
+      { value: 3, label: '๓', sublabel: 'ปานกลาง' },
+      { value: 4, label: '๔', sublabel: '' },
+      { value: 5, label: '๕', sublabel: 'มากที่สุด' }
+    ];
+
+    return `
+      <div class="flex justify-center gap-3 flex-wrap">
+        ${ratings.map(r => `
+          <label class="flex flex-col items-center gap-1 cursor-pointer group">
+            <input 
+              type="radio" 
+              name="s${questionNum}" 
+              value="${r.value}"
+              ${d['s'+questionNum] == r.value ? 'checked' : ''}
+              onchange="updateFieldFromInput('s${questionNum}', this.value)"
+              class="w-5 h-5 text-green-600 cursor-pointer"
+            />
+            <div class="text-center">
+              <div class="text-sm font-semibold">${r.label}</div>
+              ${r.sublabel ? `<div class="text-xs text-gray-500">${r.sublabel}</div>` : ''}
+            </div>
+          </label>
+        `).join('')}
+      </div>
+    `;
+  };
+
+  const content = `
+    <div class="space-y-8">
+      <!-- ส่วนรุ่นที่ -->
+      <div class="bg-gray-50 p-6 rounded-lg">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          รุ่นที่เข้ารับการอบรม <span class="text-red-500">*</span>
+        </label>
+        <select 
+          onchange="updateFieldFromInput('batch', this.value)"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+        >
+          <option value="">-- เลือกรุ่น --</option>
+          ${BATCHES.map(b => `
+            <option value="${b}" ${d.batch === b ? 'selected' : ''}>${b}</option>
+          `).join('')}
+        </select>
+      </div>
+
+      <!-- คำถามทั้งหมด -->
+      ${questions.map((q, idx) => `
+        <div class="bg-white p-6 rounded-lg border border-gray-200">
+          <div class="font-medium text-gray-900 mb-4">${q}</div>
+          ${renderRatingScale(idx + 1)}
+        </div>
+      `).join('')}
+
+      <!-- ข้อเสนอแนะ -->
+      <div class="bg-gray-50 p-6 rounded-lg">
+        <label class="block text-sm font-medium text-gray-700 mb-2">
+          ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span>
+        </label>
+        <textarea
+          value="${d.suggestions || ''}"
+          oninput="updateFieldFromInput('suggestions', this.value)"
+          placeholder="กรุณาระบุข้อเสนอแนะเพิ่มเติม (ไม่บังคับ)"
+          rows="4"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
+        ></textarea>
+      </div>
+    </div>
+  `;
+
+  // Validation
+  const canSubmit = () => {
+    if (!d.batch) return false;
+    for (let i = 1; i <= 8; i++) {
+      if (!d['s' + i]) return false;
+    }
+    return true;
+  };
 
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินความพึงพอใจต่อการฝึกอบรม', TRAINING_INFO.course)}
+      ${FormHeader('แบบประเมินความพึงพอใจ', 'สำหรับผู้เข้ารับการอบรม')}
       <div class="max-w-4xl mx-auto px-6 py-10">
-        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10 space-y-8">
-          <!-- Personal Info -->
-          <div>
-            <h3 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-              </svg>
-              ข้อมูลส่วนบุคคล
-            </h3>
-            <div class="grid md:grid-cols-3 gap-4">
-              <input 
-                type="text" 
-                placeholder="ชื่อ-นามสกุล *" 
-                value="${d.fullName||''}" 
-                oninput="updateFieldFromInput('fullName', this.value)" 
-                class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"
-              />
-              <input 
-                type="text" 
-                placeholder="สังกัด *" 
-                value="${d.department||''}" 
-                oninput="updateFieldFromInput('department', this.value)" 
-                class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none"
-              />
-              <select 
-                onchange="updateField('batch', this.value)" 
-                class="px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none bg-white"
-              >
-                <option value="">-- รุ่นที่ *</option>
-                ${BATCHES.map(v => `<option ${d.batch===v?'selected':''}>${v}</option>`).join('')}
-              </select>
-            </div>
-          </div>
-
-          <!-- Ratings -->
-          <div>
-            <h3 class="font-semibold text-slate-900 mb-4 flex items-center gap-2">
-              <svg class="w-5 h-5 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
-              </svg>
-              การประเมินความพึงพอใจ
-            </h3>
-            <div class="space-y-6">
-              ${items.map((it, idx) => `
-                <div class="p-6 rounded-xl ${idx % 2 === 0 ? 'bg-slate-50' : 'bg-white'} border border-slate-200">
-                  <label class="block text-sm text-slate-800 font-medium mb-4">${it.t}</label>
-                  ${RatingScale(it.k, d[it.k] || 0)}
-                </div>
-              `).join('')}
-            </div>
-          </div>
-
-          <!-- Comments -->
-          <div class="space-y-6">
-            <div>
-              <label class="block text-sm font-medium text-slate-800 mb-2 flex items-center gap-2">
-                <svg class="w-4 h-4 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                </svg>
-                สิ่งที่ท่านประทับใจมากที่สุด
-              </label>
-              <textarea 
-                rows="3" 
-                oninput="updateFieldFromInput('bestPart', this.value)" 
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-                placeholder="สิ่งที่ประทับใจ..."
-              >${d.bestPart||''}</textarea>
-            </div>
-            <div>
-              <label class="block text-sm font-medium text-slate-800 mb-2 flex items-center gap-2">
-                <svg class="w-4 h-4 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
-                </svg>
-                สิ่งที่ควรปรับปรุง
-              </label>
-              <textarea 
-                rows="3" 
-                oninput="updateFieldFromInput('improvePart', this.value)" 
-                class="w-full px-4 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none"
-                placeholder="ข้อเสนอแนะในการปรับปรุง..."
-              >${d.improvePart||''}</textarea>
-            </div>
-          </div>
-
-          ${state.error ? `
-            <div class="p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-start gap-3">
-              <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-              </svg>
-              <span>${state.error}</span>
-            </div>
-          ` : ''}
-
-          <div class="pt-6 border-t border-slate-100 flex justify-between items-center">
+        <div class="bg-white rounded-2xl shadow-xl p-8">
+          ${content}
+          
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between mt-10 pt-6 border-t border-gray-100">
             <button 
               onclick="navigate('landing')" 
-              class="px-6 py-3 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2 transition-colors"
+              class="px-6 py-3 text-gray-600 hover:text-gray-900 hover:bg-gray-50 rounded-lg flex items-center gap-2 transition-colors"
             >
               <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
               </svg>
-              ย้อนกลับ
+              กลับหน้าหลัก
             </button>
+            
             <button 
-              onclick="${canSubmit ? `submitForm('satisfaction', state.formData)` : ''}" 
-              ${!canSubmit||state.loading?'disabled':''} 
-              class="px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 transition-colors shadow-lg hover:shadow-xl"
+              onclick="${canSubmit() ? `submitForm('satisfaction', state.formData)` : ''}" 
+              ${!canSubmit() || state.loading ? 'disabled' : ''} 
+              class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-2 transition-colors shadow-lg hover:shadow-xl"
             >
               ${state.loading ? `
                 <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
@@ -1109,7 +1280,6 @@ function SatisfactionForm() {
     </div>
   `;
 }
-
 // ============================================================
 // Success Page
 // ============================================================
@@ -1142,18 +1312,7 @@ function Success() {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
             </svg>
-            กลับหน้าหลัก
-          </button>
-          
-          <button 
-            onclick="window.print()" 
-            class="px-8 py-3.5 bg-white border-2 border-slate-300 text-slate-700 rounded-xl hover:bg-slate-50 flex items-center justify-center gap-2 hover-lift font-medium"
-          >
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
-            </svg>
-            พิมพ์หน้านี้
-          </button>
+            กลับหน้าหลัก          
         </div>
 
         <div class="mt-8 text-xs text-slate-400">
