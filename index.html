@@ -212,10 +212,10 @@
   const API_URL = 'https://script.google.com/macros/s/AKfycbwY-QMMFfJETbadvC6kQe7znXfRG7iki-srtn6mOIrtEBuovaBYA1fqrEQe_c4lyjTbBw/exec';
 
   // 🎯 ตัวเลือกรุ่นการฝึกอบรม
-  const BATCHES = ['รุ่นที่ ๑', 'รุ่นที่ ๒', 'รุ่นที่ ๓', 'รุ่นที่ ๔'];
+  const BATCHES = ['รุ่นที่ 1', 'รุ่นที่ 2', 'รุ่นที่ 3', 'รุ่นที่ 4'];
   const COURSES = [
-    { value: 'หัวหน้าเจ้าหน้าที่', batches: ['รุ่นที่ ๑'] },
-    { value: 'เจ้าหน้าที่',        batches: ['รุ่นที่ ๒', 'รุ่นที่ ๓', 'รุ่นที่ ๔'] }
+    { value: 'หัวหน้าเจ้าหน้าที่', batches: ['รุ่นที่ 1'] },
+    { value: 'เจ้าหน้าที่',        batches: ['รุ่นที่ 2', 'รุ่นที่ 3', 'รุ่นที่ 4'] }
   ];
 
   // 📅 ข้อมูลการฝึกอบรม
@@ -518,8 +518,8 @@ function Landing() {
               <span class="text-[#B22222]">ไปใช้ในการปฏิบัติงาน</span>
             </h1>
             <div class="space-y-3 mb-8">
-              <p class="text-slate-600 text-base leading-relaxed">${TRAINING_INFO.course}</p>
-              <div class="flex flex-col gap-2 text-base text-slate-600">
+              <p class="text-slate-600 text-xl leading-relaxed">${TRAINING_INFO.course}</p>
+              <div class="flex flex-col gap-2 text-xl text-slate-600">
                 ${TRAINING_INFO.laws.map(law => `
                   <div class="flex items-start gap-2">
                     <svg class="w-4 h-4 mt-0.5 text-primary-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
@@ -654,7 +654,7 @@ function Step1Fields(d) {
       </div>
       <!-- ระดับ (ไม่บังคับ) + ช่องกรอกเมื่อเลือก "อื่นๆ" -->
       <div>
-        <label class="block text-base font-medium text-gray-700 mb-2">ระดับ</label>
+        <label class="block text-sm font-medium text-gray-700 mb-2">ระดับ</label>
         <select id="levelSelect" onchange="updateFieldFromInput('level', this.value); _toggleLevelOther(this.value);"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกระดับ --</option>
@@ -666,7 +666,7 @@ function Step1Fields(d) {
           <input type="text" value="${d.levelOther || ''}"
             oninput="updateFieldFromInput('levelOther', this.value)"
             placeholder="กรุณาระบุระดับ"
-            class="w-full px-4 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-nonetext-base"/>
+            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-nonetext-base"/>
         </div>
       </div>
       <!-- สังกัด สำนัก/สำนักงานเขต/ส่วนราชการ (บังคับ) -->
@@ -763,13 +763,13 @@ function SelfAssessment() {
         <!-- หมายเหตุ 2.2 -->
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-1">
           <p class="text-xm text-amber-900 leading-relaxed">
-            <strong>หมายเหตุ</strong>ตัวชี้วัด ผู้ผ่านการฝึกอบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน) ขึ้นไป
+            <strong>หมายเหตุ</strong> ตัวชี้วัด ผู้อบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน) ขึ้นไป
           </p>
         </div>
       </div>`;
 
   } else if (step === 3) {
-    const options = ['นำมาใช้ทั้งหมด','นำมาใช้ค่อนข้างมาก','นำมาใช้เฉพาะงานที่รับผิดชอบ','นำมาใช้น้อยมาก','ยังไม่เคยนำมาใช้ใดๆทั้งสิ้น'];
+    const options = ['นำมาใช้ทั้งหมด','นำมาใช้ค่อนข้างมาก','นำมาใช้เฉพาะงานที่รับผิดชอบ','นำมาใช้น้อยมาก','ยังไม่เคยนำมาใช้เลย'];
     content = `
       <div class="space-y-6">
         <div class="bg-white border border-gray-200 rounded-lg p-6">
@@ -792,7 +792,7 @@ function SelfAssessment() {
     content = `
       <div class="space-y-6">
         <div class="bg-white border border-gray-200 rounded-lg p-6">
-          <label class="block text-base font-medium text-gray-700 mb-2">
+          <label class="block text-xl font-medium text-gray-700 mb-2">
             ข้อเสนอแนะ <span class="text-base text-gray-400">(ถ้ามี)</span>
           </label>
           <textarea
@@ -921,7 +921,7 @@ function SupervisorAssessment() {
         <!-- หมายเหตุ 3.2 -->
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
           <p class="text-xm text-amber-800 leading-relaxed">
-            <strong>หมายเหตุ</strong> ตัวชี้วัด ผู้ผ่านการฝึกอบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน) ขึ้นไป
+            <strong>หมายเหตุ</strong> ตัวชี้วัด ผู้อบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน)
           </p>
         </div>
       </div>`;
@@ -949,7 +949,7 @@ function SupervisorAssessment() {
       <h2 class="text-xl font-serif font-semibold text-slate-900 mb-2">ความคิดเห็นและข้อเสนอแนะ</h2>
       <p class="text-slate-500 mb-6">ข้อเสนอแนะเกี่ยวกับการจัดฝึกอบรม</p>
       <div>
-        <label class="block text-base font-medium text-slate-800 mb-2">ความคิดเห็นและข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
+        <label class="block text-xl font-medium text-slate-800 mb-2">ความคิดเห็นและข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
         <textarea rows="6"
           oninput="updateFieldFromInput('overallComment', this.value)"
           class="w-full px-3 py-4 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none placeholder:text-xm text-base"
@@ -995,7 +995,7 @@ function SupervisorAssessment() {
 
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินโดยจากหน่วยงาน ภายหลังการฝึกอบรม')}
+      ${FormHeader('แบบประเมินโดยหน่วยงาน ภายหลังการฝึกอบรม')}
       <div class="max-w-4xl mx-auto px-6 py-10">
         ${ProgressBar(step, 4)}
         <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10">
@@ -1122,7 +1122,7 @@ function Success() {
         <h1 class="font-serif text-4xl text-slate-900 mb-4 font-semibold">ส่งแบบประเมินเรียบร้อย</h1>
         <div class="bg-white rounded-xl p-6 shadow-lg border border-slate-100 mb-6">
           <p class="text-slate-600 leading-relaxed mb-3">ขอขอบคุณที่ท่านให้ความร่วมมือในการประเมินผลการฝึกอบรม</p>
-          <p class="text-sm text-slate-500 leading-relaxed">ข้อมูลของท่านจะถูกปกปิด และจะนำไปใช้ในการพัฒนาและปรับปรุงการจัดฝึกอบรมในโอกาสต่อไป</p>
+          <p class="text-sm text-slate-500 leading-relaxed">ข้อมูลของท่านจะถูกปกปิด และจะนำไปใช้ในการพัฒนาปรับปรุงการฝึกอบรมในโอกาสต่อไป</p>
         </div>
         <div class="flex flex-col sm:flex-row gap-3 justify-center">
           <button onclick="navigate('landing')"
