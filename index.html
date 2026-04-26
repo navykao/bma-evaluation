@@ -910,8 +910,7 @@ function SupervisorAssessment() {
       { k:'k5', label:'6. การนำแนวทางปฏิบัติที่ถูกต้องไปปรับใช้กับงานจัดซื้อจัดจ้างในหน่วยงาน' }
     ];
     content = `
-      content = `
-      <h2 class="text-3xl font-serif font-bold text-slate-900 mb-2 mt-[-1.5rem] leading-tight">การประเมินความรู้และทักษะ</h2>
+          <h2 class="text-3xl font-serif font-bold text-slate-900 mb-2 mt-[-1.5rem] leading-tight">การประเมินความรู้และทักษะ</h2>
       <p class="text-xl text-slate-600 mb-8">ประเมินความรู้และทักษะของผู้เข้ารับการอบรมหลังจากเสร็จสิ้นการฝึกอบรม</p> 
        <div class="space-y-5">
         ${items.map(it => `
@@ -925,6 +924,7 @@ function SupervisorAssessment() {
           </p>
         </div>
       </div>`;
+    
   // ---- Step 3: ประเมินพฤติกรรม แบบให้คะแนน 2 ข้อ ----
   } else if (step === 3) {
     const behavItems = [
