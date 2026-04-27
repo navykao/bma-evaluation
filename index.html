@@ -226,7 +226,7 @@
     laws: [
       'พระราชบัญญัติการจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. ๒๕๖๐',
       'ระเบียบกระทรวงการคลังว่าด้วยการจัดซื้อจัดจ้างฯ พ.ศ. ๒๕๖๐',
-      'อำนาจหน้าที่สำนักงาน ป.ป.ช.และมีส่วนร่วมในการป้องกันการทุจริต'
+      'อำนาจหน้าที่สำนักงาน ป.ป.ช.และการมีส่วนร่วมในการป้องกันการทุจริต'
     ]
   };
 </script>
@@ -500,7 +500,7 @@ function Landing() {
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
             </svg>
-            <span class="font-medium font-bold text-lg text-white-900">ปีงบประมาณ พ.ศ. ${TRAINING_INFO.year}</span>
+            <span class="font-medium font-bold text-lg text-white">ปีงบประมาณ พ.ศ. ${TRAINING_INFO.year}</span>
           </div>
         </div>
       </div>
@@ -654,7 +654,7 @@ function Step1Fields(d) {
       </div>
       <!-- ระดับ (ไม่บังคับ) + ช่องกรอกเมื่อเลือก "อื่นๆ" -->
       <div>
-        <label class="block text-sm font-medium text-gray-700 mb-2">ระดับ</label>
+        <label class="block text-base font-medium text-gray-700 mb-2">ระดับ</label>
         <select id="levelSelect" onchange="updateFieldFromInput('level', this.value); _toggleLevelOther(this.value);"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกระดับ --</option>
@@ -669,7 +669,7 @@ function Step1Fields(d) {
             class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-nonetext-base"/>
         </div>
       </div>
-      <!-- สังกัด สำนัก/สำนักงานเขต/ส่วนราชการ (บังคับ) -->
+      <!-- หน่วยงาน (บังคับ) -->
       <div>
         <label class="block text-base font-medium text-gray-700 mb-2">หน่วยงาน<span class="text-red-500">*</span></label>
         <input type="text" value="${d.department || ''}"
@@ -677,7 +677,7 @@ function Step1Fields(d) {
           placeholder="สำนัก / สำนักงานเขต"
           class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
-      <!-- สังกัด สำนักงาน/กอง/ฝ่าย (ไม่บังคับ) -->
+      <!-- สังกัด (ไม่บังคับ) -->
       <div>
         <label class="block text-base font-medium text-gray-700 mb-2">สังกัด</label>
         <input type="text" value="${d.division || ''}"
@@ -687,9 +687,9 @@ function Step1Fields(d) {
       </div>
       <!-- หลักสูตร (บังคับ) -->
       <div>
-        <label class="block text-base font-medium text-gray-700 mb-2">หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
+        <label class="block text-base font-medium text-gray-900 mb-2">หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
         <select onchange="updateFieldFromInput('course', this.value); updateBatchOptions();"
-          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base">
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกหลักสูตร --</option>
           ${COURSES.map(c =>
             '<option value="' + c.value + '" ' + (d.course === c.value ? 'selected' : '') + '>' + c.value + '</option>'
@@ -698,7 +698,7 @@ function Step1Fields(d) {
       </div>
       <!-- รุ่นที่ (บังคับ) -->
       <div>
-        <label class="block text-base font-medium text-gray-700 mb-2">รุ่นที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
+        <label class="block text-base font-medium text-gray-900 mb-2">รุ่นที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
         <select id="batchSelect"
           onchange="updateFieldFromInput('trainingBatch', this.value)"
           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none"
@@ -743,16 +743,16 @@ function SelfAssessment() {
   } else if (step === 2) {
     const qs = [
       { id:'k1', num:'1', text:'ความรู้ความเข้าใจเกี่ยวกับระเบียบกระทรวงการคลังว่าด้วยการจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. ๒๕๖๐' },
-      { id:'k2', num:'2', text:'ท่านได้รับฟังปัญหาจากหน่วยงานอื่นและนำมาปรับใช้ในการทำงานของตนเอง' },
-      { id:'k3', num:'3', text:'ท่านได้เรียนรู้วิธีการจัดซื้อจัดจ้าง และข้อควรระวังต่างๆมากขึ้น' },
+      { id:'k2', num:'2', text:'ท่านได้รับฟังการปฏิบัติจากหน่วยงานอื่นและนำมาปรับใช้ในการทำงานของตนเอง' },
+      { id:'k3', num:'3', text:'ท่านได้เรียนรู้วิธีการจัดซื้อจัดจ้าง และข้อควรระวังต่างๆ มากขึ้น' },
       { id:'k4', num:'4', text:'ท่านได้เรียนรู้อำนาจหน้าที่และมาตรการป้องกันการทุจริตของ สำนักงาน ป.ป.ช.' }
     ];
     content = `
-      <div class="space-y-6">
+      <div class="space-y-5">
         <div class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded">
           <p class="text-sm text-blue-900">
             <strong>คำชี้แจง:</strong> กรุณาประเมินระดับความรู้ความเข้าใจของท่านหลังฝึกอบรมโดยการให้คะแนน 
-            (1 = น้อยที่สุด, 5 = มากที่สุด)
+            ( 1 = น้อยที่สุด, 5 = มากที่สุด )
           </p>
         </div>
         ${qs.map(q => `
@@ -762,7 +762,7 @@ function SelfAssessment() {
           </div>`).join('')}
         <!-- หมายเหตุ 2.2 -->
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-3 mt-1">
-          <p class="text-xm text-amber-900 leading-relaxed">
+          <p class="text-xs text-amber-900 leading-relaxed">
             <strong>หมายเหตุ</strong> ตัวชี้วัด ผู้อบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน) ขึ้นไป
           </p>
         </div>
@@ -773,7 +773,7 @@ function SelfAssessment() {
     content = `
       <div class="space-y-6">
         <div class="bg-white border border-gray-200 rounded-lg p-6">
-          <div class="font-medium text-gray-900 mb-4">
+          <div class="font-lg text-gray-900 mb-4">
             หลังการฝึกอบรม ท่านได้นำความรู้เกี่ยวกับการจัดซื้อจัดจ้าง การบริหารพัสดุ และการป้องกันการทุจริต กลับไปปฏิบัติในหน่วยงาน
           </div>
           <div class="space-y-2">
@@ -906,8 +906,8 @@ function SupervisorAssessment() {
       { k:'k1', label:'1. ความรู้ความเข้าใจเกี่ยวกับระเบียบ ขั้นตอนการปฏิบัติงานหลังการฝึกอบรม' },
       { k:'k2', label:'2. สามารถนำความรู้ไปประยุกต์ใช้ในการปฏิบัติงาน' },
       { k:'k3', label:'3. การพัฒนาทักษะในการปฏิบัติงานหลังการอบรม' },
-      { k:'k4', label:'5. ความตั้งใจและความกระตือรือร้นในการปฏิบัติงานหลังผ่านการฝึกอบรม' },
-      { k:'k5', label:'6. การนำแนวทางปฏิบัติที่ถูกต้องไปปรับใช้กับงานจัดซื้อจัดจ้างในหน่วยงาน' }
+      { k:'k4', label:'4. ความตั้งใจและความกระตือรือร้นในการปฏิบัติงานหลังผ่านการฝึกอบรม' },
+      { k:'k5', label:'5. การนำแนวทางปฏิบัติที่ถูกต้องไปปรับใช้กับงานจัดซื้อจัดจ้างในหน่วยงาน' }
     ];
     content = `
           <h2 class="text-2xl font-serif font-bold text-slate-800 mb-2 mt-[-1.5rem] leading-tight">การประเมินความรู้และทักษะ</h2>
@@ -919,7 +919,7 @@ function SupervisorAssessment() {
             ${RatingScale(it.k, d[it.k] || 0)}
           </div>`).join('')}
         <div class="bg-amber-50 border border-amber-200 rounded-lg p-4">
-          <p class="text-sm text-amber-800 leading-relaxed">
+          <p class="text-xs text-amber-800 leading-relaxed">
             <strong>หมายเหตุ</strong> ตัวชี้วัด ผู้อบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน)
           </p>
         </div>
