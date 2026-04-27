@@ -423,8 +423,8 @@ function FormHeader(title, subtitle) {
             </svg>
           </div>
           <div>
-            <div class="text-xs opacity-95">กรุงเทพมหานคร · สำนักการคลัง</div>
-            <div class="font-serif text-sm">สำนักงานมาตรฐานการคลังและทรัพย์สิน</div>
+            <div class="text-sm opacity-50">กรุงเทพมหานคร · สำนักการคลัง</div>
+            <div class="font-serif text-base">สำนักงานมาตรฐานการคลังและทรัพย์สิน</div>
           </div>
         </div>
         <h1 class="font-serif text-2xl md:text-3xl font-semibold mb-1">${title}</h1>
@@ -843,7 +843,7 @@ function SelfAssessment() {
 
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินตนเอง', 'สำหรับผู้เข้ารับการอบรมภายหลังการฝึกอบรมแล้ว')}
+      ${FormHeader('แบบประเมินตนเอง', 'สำหรับผู้เข้ารับการอบรมภายหลังการฝึกอบรม')}
       <div class="max-w-4xl mx-auto px-6 py-10">
         ${ProgressBar(step, 4)}
         <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10">
@@ -994,7 +994,7 @@ function SupervisorAssessment() {
 
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินโดยหน่วยงาน ภายหลังการฝึกอบรม')}
+      ${FormHeader('แบบประเมินโดยหน่วยงาน หลังการฝึกอบรม', 'บุคคลากรในหน่วยเป็นผู้ประเมิน')}
       <div class="max-w-4xl mx-auto px-6 py-10">
         ${ProgressBar(step, 4)}
         <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10">
