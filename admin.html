@@ -39,19 +39,24 @@ if (!ADMIN_KEY) {
   window.location.href = '/';
 }
   async function resetAllData() {
-    if (!confirm('⚠️ ยืนยันลบข้อมูลทดสอบทั้งหมด?\nไม่สามารถกู้คืนได้!')) return;
-    try {
-      await fetch(API_URL, {
-        method: 'POST',       
-        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ type: 'reset', adminKey: ADMIN_KEY })
-      });
-      alert('✅ ล้างข้อมูลเรียบร้อย');
-      loadData();
-    } catch(e) {
-      alert('❌ เกิดข้อผิดพลาด: ' + e.message);
+  if (!confirm('⚠️ ยืนยันลบข้อมูลทดสอบทั้งหมด?\nไม่สามารถกู้คืนได้!')) return;
+  try {
+    // ✅ เปลี่ยนเป็น GET + query string เหมือนกับ loadData() และ loadRawData()
+    const response = await fetch(
+      `${API_URL}?action=reset&key=${encodeURIComponent(ADMIN_KEY)}`
+    );
+    const result = await response.json(); // ✅ ตรวจ response จริง
+
+    if (result.status !== 'success') {
+      throw new Error(result.message || 'ล้างข้อมูลไม่สำเร็จ');
     }
+
+    alert('✅ ล้างข้อมูลเรียบร้อย');
+    loadData(); // รีโหลด dashboard
+  } catch(e) {
+    alert('❌ เกิดข้อผิดพลาด: ' + e.message);
   }
+}
 </script>
 
 <!-- ========== HEADER ========== -->
