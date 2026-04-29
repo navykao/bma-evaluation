@@ -834,7 +834,7 @@ function SelfAssessment() {
           กลับหน้าหลัก
         </button>` : `
         <button onclick="setState({step: ${step - 1}})"
-          class="btn-animated px-6 py-3 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2">
+          class="btn-animated px-5 py-2.5 text-sm text-slate-700 border border-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2"
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           ย้อนกลับ
         </button>`}
@@ -1003,7 +1003,7 @@ function SupervisorAssessment() {
           onclick="if(canNextGlobal()) submitForm('supervisor', state.formData)"
           ${!canNext() || state.loading ? 'disabled' : ''}
           style="opacity:${canNext() && !state.loading ? '1' : '0.4'}; cursor:${canNext() && !state.loading ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2 shadow-lg">
+          class="btn-animated px-5 py-2.5 text-sm bg-emerald-600 text-white rounded-lg ..."700 flex items-center gap-2 shadow-lg">
           ${state.loading ? `
             <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
             <span>กำลังส่ง...</span>` : `
