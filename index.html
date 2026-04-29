@@ -112,13 +112,13 @@
   .rating-card:nth-child(2) .rating-card-inner { border-color: #fdba74; background: #fff8f0; }
   .rating-card:nth-child(3) .rating-card-inner { border-color: #facc15; background: #fffdf0; }
   .rating-card:nth-child(4) .rating-card-inner { border-color: #86efac; background: #f2fff5; }
-  .rating-card:nth-child(5) .rating-card-inner { border-color: #93c5fd; background: #edfff3; }
+  .rating-card:nth-child(5) .rating-card-inner { border-color: #93c5fd; background: #bfdbfe; }
 
   .rating-card:nth-child(1) .rating-num { color: #dc2626; }
   .rating-card:nth-child(2) .rating-num { color: #ea580c; }
   .rating-card:nth-child(3) .rating-num { color: #ca8a04; }
   .rating-card:nth-child(4) .rating-num { color: #16a34a; }
-  .rating-card:nth-child(5) .rating-num { color: #15803d; }
+  .rating-card:nth-child(5) .rating-num { color: #2563eb; }
 
   .rating-card-inner {
     display: flex;
@@ -985,7 +985,7 @@ function SupervisorAssessment() {
           หน้าหลัก
         </button>` : `
         <button onclick="setState({step: ${step - 1}})"
-          class="btn-animated px-6 py-3 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2">
+          class="btn-animated px-6 py-3 border-2 border-gray-400 bg-gray-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2">
           <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
           ย้อนกลับ
         </button>`}
@@ -1013,7 +1013,7 @@ function SupervisorAssessment() {
 
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินโดยหน่วยงาน', '(ข้าราชการหรือผูู้บังคับบัญชาในสังกัดเป็นผู้ประเมิน')}
+      ${FormHeader('แบบประเมินโดยหน่วยงาน', '(เจ้าหน้าที่ ให้หัวหน้างาน/หัวหน้าฝ่าย/ข้าราชการที่อาวุโสกว่าผู้อบรม เป็นผู้ประเมินแทนหน่วยงาน /// หัวหน้าเจ้าหน้าที่ * ให้ข้าราชการระดับเทียบเท่า หรือตัวแทนหน่วยงาน ฯลฯ (พิจารณาตามความเหมาะสม) เป็นผู้ประเมิน')}
       <div class="max-w-4xl mx-auto px-6 py-10">
         ${ProgressBar(step, 4)}
         <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-8 md:p-10">
@@ -1077,7 +1077,7 @@ function SatisfactionForm() {
             <label class="block ttext-xl font-medium text-gray-700 mb-2">ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
             <textarea
               oninput="updateFieldFromInput('suggestions', this.value)"
-              placeholder="กรุณาระบุ หากมีข้อเสนอแนะ"
+              placeholder="กรุณาระบุ "
               rows="4"
               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"
             >${d.suggestions || ''}</textarea>
