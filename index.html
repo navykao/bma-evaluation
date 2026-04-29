@@ -308,8 +308,8 @@ function canNextGlobal() {
   const page = state.page;
 
   if (page === 'self') {
-    // บังคับเฉพาะ: ชื่อ, สังกัดสำนัก, หลักสูตร, รุ่น
-    if (step === 1) return !!(d.fullName && d.department && d.course && d.trainingBatch);
+    // บังคับเฉพาะ: ชื่อ, สังกัดสำนัก, หลักสูตร (รุ่นไม่บังคับ)
+    if (step === 1) return !!(d.fullName && d.department && d.course);
     if (step === 2) return ['k1','k2','k3','k4'].every(k => d[k]);
     if (step === 3) return !!(d.a1);
     if (step === 4) return true;
@@ -685,7 +685,7 @@ function Step1Fields(d) {
           <input type="text" value="${d.levelOther || ''}"
             oninput="updateFieldFromInput('levelOther', this.value)"
             placeholder="กรุณาระบุระดับ"
-            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-nonetext-base"/>
+            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
         </div>
       </div>
       <!-- หน่วยงาน (บังคับ) -->
@@ -747,7 +747,7 @@ function SelfAssessment() {
   const step = state.step;
 
   function canNext() {
-    if (step === 1) return !!(d.fullName && d.department && d.course && d.trainingBatch);
+    if (step === 1) return !!(d.fullName && d.department && d.course);
     if (step === 2) return ['k1','k2','k3','k4'].every(k => d[k]);
     if (step === 3) return !!(d.a1);
     if (step === 4) return true;
@@ -1002,7 +1002,7 @@ function SupervisorAssessment() {
           onclick="if(canNextGlobal()) submitForm('supervisor', state.formData)"
           ${!canNext() || state.loading ? 'disabled' : ''}
           style="opacity:${canNext() && !state.loading ? '1' : '0.4'}; cursor:${canNext() && !state.loading ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-5 py-2.5 text-sm bg-emerald-600 text-white rounded-lg ..."700 flex items-center gap-2 shadow-lg">
+          class="btn-animated px-5 py-2.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2 shadow-lg">
           ${state.loading ? `
             <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
             <span>กำลังส่ง...</span>` : `
