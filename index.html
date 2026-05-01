@@ -681,25 +681,25 @@ function Step1Fields(d) {
     <div class="space-y-6">
       <!-- ชื่อ-นามสกุล (บังคับ) -->
       <div>
-        <label class="block text-base md:text-lg font-medium text-gray-700 mb-2">ชื่อ - นามสกุล <span class="text-red-500">*</span></label>
+        <label class="block text-base md:text-lg font-medium text-gray-900 mb-2">ชื่อ - นามสกุล <span class="text-red-500">*</span></label>
         <input type="text" value="${d.fullName || ''}"
           oninput="updateFieldFromInput('fullName', this.value)"
           placeholder="กรุณาระบุชื่อ - นามสกุล"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- ตำแหน่ง (ไม่บังคับ) -->
       <div>
-        <label class="block text-base md:text-lg font-medium text-gray-700 mb-2">ตำแหน่ง</label>
+        <label class="block text-base md:text-lg font-medium text-gray-900 mb-2">ตำแหน่ง</label>
         <input type="text" value="${d.position || ''}"
           oninput="updateFieldFromInput('position', this.value)"
           placeholder="เช่น นักวิขาการเงินและบัญชี"          
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- ระดับ (ไม่บังคับ) + ช่องกรอกเมื่อเลือก "อื่นๆ" -->
       <div>
-        <label class="block text-base md:text-lg font-medium text-gray-200 mb-2">ระดับ</label>
+        <label class="block text-base md:text-lg font-medium text-gray-900 mb-2">ระดับ</label>
         <select id="levelSelect" onchange="updateFieldFromInput('level', this.value); _toggleLevelOther(this.value);"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกระดับ --</option>
           ${['ปฏิบัติงาน','ปฏิบัติการ','ชำนาญงาน','ชำนาญการ','ชำนาญการพิเศษ','อื่นๆ'].map(lv =>
             '<option value="' + lv + '" ' + (d.level === lv ? 'selected' : '') + '>' + lv + '</option>'
@@ -709,30 +709,30 @@ function Step1Fields(d) {
           <input type="text" value="${d.levelOther || ''}"
             oninput="updateFieldFromInput('levelOther', this.value)"
             placeholder="กรุณาระบุระดับ"
-            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
+            class="w-full px-2 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
         </div>
       </div>
       <!-- หน่วยงาน (บังคับ) -->
       <div>
-        <label class="block text-base md:text-lg font-medium text-gray-700 mb-2">หน่วยงาน<span class="text-red-500">*</span></label>
+        <label class="block text-base md:text-lg font-medium text-gray-900 mb-2">หน่วยงาน<span class="text-red-500">*</span></label>
         <input type="text" value="${d.department || ''}"
           oninput="updateFieldFromInput('department', this.value)"
           placeholder="สำนัก / สำนักงานเขต"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- สังกัด (ไม่บังคับ) -->
       <div>
-        <label class="block text-base md:text-lg font-medium text-gray-300 mb-2">สังกัด</label>
+        <label class="block text-base md:text-lg font-medium text-gray-900 mb-2">สังกัด</label>
         <input type="text" value="${d.division || ''}"
           oninput="updateFieldFromInput('division', this.value)"
           placeholder="สำนักงาน/กอง/ฝ่าย"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- หลักสูตร (บังคับ) -->
       <div>
-        <label class="block text-lg font-medium text-gray-300 mb-2">หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
+        <label class="block text-lg font-medium text-gray-900 mb-2">หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
         <select onchange="updateFieldFromInput('course', this.value); updateBatchOptions();"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกหลักสูตร --</option>
           ${COURSES.map(c =>
             '<option value="' + c.value + '" ' + (d.course === c.value ? 'selected' : '') + '>' + c.value + '</option>'
@@ -741,9 +741,9 @@ function Step1Fields(d) {
       </div>
       <!-- รุ่นที่ (ไม่บังคับ) -->
       <div>
-        <label class="block text-lg font-medium text-gray-300 mb-2">รุ่นที่เข้ารับการอบรม</label>
+        <label class="block text-lg font-medium text-gray-900 mb-2">รุ่นที่เข้ารับการอบรม</label>
         <select id="batchSelect"
-          class="w-full px-3 py-2 border border-gray-200 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+          class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
           <option value="">-- เลือกรุ่น --</option>
           <option value="1">รุ่นที่ 1</option>
           <option value="2">รุ่นที่ 2</option>
@@ -814,8 +814,8 @@ function SelfAssessment() {
     const options = ['นำมาใช้ทั้งหมด','นำมาใช้ค่อนข้างมาก','นำมาใช้เฉพาะงานที่รับผิดชอบ','นำมาใช้น้อยมาก','ยังไม่เคยนำมาใช้เลย'];
     content = `
       <div class="space-y-6">
-        <div class="bg-white border border-gray-300 rounded-lg p-6">
-          <div class="font-lg text-gray-900 mb-4">
+        <div class="bg-white border border-gray-300 rounded-lg p-4">
+          <div class="font-lg text-gray-900 mb-3">
             หลังการฝึกอบรม ท่านได้นำความรู้เกี่ยวกับการจัดซื้อจัดจ้าง การบริหารพัสดุ และการป้องกันการทุจริต กลับไปปฏิบัติในหน่วยงาน
           </div>
           <div class="space-y-2">
@@ -832,16 +832,16 @@ function SelfAssessment() {
 
   } else if (step === 4) {
     content = `
-      <div class="space-y-6">
-        <div class="bg-white border border-gray-200 rounded-lg p-6">
-          <label class="block text-xl font-medium text-gray-700 mb-2">
+      <div class="space-y-4">
+        <div class="bg-white border border-gray-300 rounded-lg p-6">
+          <label class="block text-xl font-medium text-gray-900 mb-2">
             ข้อเสนอแนะ <span class="text-base text-gray-400"> </span>
           </label>
           <textarea
             oninput="updateFieldFromInput('suggestions', this.value)"
             placeholder=" "
             rows="6"
-            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none placeholder:text-xm text-base"
+            class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none resize-none placeholder:text-xm text-base"
           >${d.suggestions || ''}</textarea>
           <p class="text-xs text-gray-500 mt-2">💡 </p>
         </div>
@@ -932,14 +932,14 @@ function SupervisorAssessment() {
           <input type="text" value="${d.supDepartment || ''}"
             oninput="updateFieldFromInput('supDepartment', this.value)"
             placeholder="สำนัก/สำนักงานเขต/อื่นๆ"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
+            class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
         </div>
         <div>
           <label class="block text-base font-medium text-gray-700 mb-2">สังกัด</label>
           <input type="text" value="${d.supDivision || ''}"
             oninput="updateFieldFromInput('supDivision', this.value)"
             placeholder="สำนักงาน/กอง/ฝ่าย"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
+            class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
         </div>
       </div>`;
 
@@ -1092,20 +1092,20 @@ function SatisfactionForm() {
           <!-- คำถาม -->
           <div class="space-y-6 mt-2">
             ${questions.map((q, idx) => `
-              <div class="question-card bg-white p-4 sm:p-6 rounded-xl border border-gray-200 shadow-sm">
+              <div class="question-card bg-white p-4 sm:p-6 rounded-xl border border-gray-300 shadow-sm">
                 <div class="question-title text-gray-900 mb-2">${q}</div>
                 ${RatingScale('s' + (idx+1), d['s'+(idx+1)] || 0, '_updateSatisfactionBtn')}
               </div>`).join('')}
           </div>
 
           <!-- ข้อเสนอแนะ -->
-          <div class="bg-gray-50 p-6 rounded-lg mt-8">
-            <label class="block text-xl font-medium text-gray-800 mb-2">ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
+          <div class="bg-gray-50 p-6 rounded-lg mt-6">
+            <label class="block text-base font-medium text-gray-800 mb-3">ข้อเสนอแนะ <span class="text-gray-300">(ถ้ามี)</span></label>
             <textarea
               oninput="updateFieldFromInput('suggestions', this.value)"
               placeholder="กรุณาระบุ "
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"
+              class="w-full px-2 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"
             >${d.suggestions || ''}</textarea>
           </div>
 
