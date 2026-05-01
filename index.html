@@ -611,10 +611,10 @@ function Landing() {
           <div class="md:col-span-2">
             <div class="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 feature-card">
               <div class="text-center mb-6">
-                <h3 class="font-serif text-xl text-slate-900 font-semibold mb-2">กรอบแนวคิดในการประเมิน</h3>
-                <p class="text-sm text-slate-500">KIRKPATRICK'S FOUR-LEVEL MODEL</p>
+                <h3 class="font-serif text-xl text-slate-900 font-semibold mb-1">กรอบแนวคิดในการประเมิน</h3>
+                <p class="text-sm text-slate-600">KIRKPATRICK'S FOUR-LEVEL MODEL</p>
               </div>
-              <div class="space-y-4">
+              <div class="space-y-3">
                 ${[
                   { num:1, color:'blue',    title:'ปฏิกิริยา',  subtitle:'REACTIONS', desc:'ความพึงพอใจของผู้เข้ารับการอบรม' },
                   { num:2, color:'emerald', title:'การเรียนรู้', subtitle:'LEARNING',  desc:'ความรู้ที่ได้รับจากการอบรม' },
@@ -685,7 +685,7 @@ function Step1Fields(d) {
         <input type="text" value="${d.fullName || ''}"
           oninput="updateFieldFromInput('fullName', this.value)"
           placeholder="กรุณาระบุชื่อ - นามสกุล"
-          class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- ตำแหน่ง (ไม่บังคับ) -->
       <div>
@@ -693,7 +693,7 @@ function Step1Fields(d) {
         <input type="text" value="${d.position || ''}"
           oninput="updateFieldFromInput('position', this.value)"
           placeholder="เช่น นักวิขาการเงินและบัญชี"          
-          class="w-full px-4 py-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- ระดับ (ไม่บังคับ) + ช่องกรอกเมื่อเลือก "อื่นๆ" -->
       <div>
