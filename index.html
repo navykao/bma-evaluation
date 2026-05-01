@@ -849,37 +849,37 @@ function SelfAssessment() {
   }
 
   const navigation = `
-    <div class="flex justify-between mt-10 pt-6 border-t border-slate-100">
+    <div class="grid grid-cols-2 gap-3 mt-10 pt-6 border-t border-slate-100">
       ${step === 1 ? `
         <button onclick="navigate('landing')"
-          class="btn-animated px-6 py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center gap-2 shadow-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          หน้าหลัก
+          class="btn-animated px-4 sm:px-6 py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center justify-center gap-2 shadow-sm whitespace-nowrap">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="text-sm sm:text-base">หน้าหลัก</span>
         </button>` : `
         <button onclick="setState({step: ${step - 1}})"
-          class="btn-animated px-5 py-2.5 text-sm text-slate-700 border border-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          ย้อนกลับ
+          class="btn-animated px-4 sm:px-5 py-2.5 text-sm text-slate-700 border border-slate-300 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          <span>ย้อนกลับ</span>
         </button>`}
       ${step < 4 ? `
         <button id="nextBtn"
           onclick="if(canNextGlobal()) setState({step: ${step + 1}})"
           ${!canNext() ? 'disabled' : ''}
           style="opacity:${canNext() ? '1' : '0.4'}; cursor:${canNext() ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2 shadow-lg">
-          <span>ถัดไป</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          class="btn-animated px-4 sm:px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center justify-center gap-2 shadow-lg whitespace-nowrap">
+          <span class="text-sm sm:text-base">ถัดไป</span>
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>` : `
         <button id="nextBtn"
           onclick="if(canNextGlobal()) submitForm('self', state.formData)"
           ${!canNext() || state.loading ? 'disabled' : ''}
           style="opacity:${canNext() && !state.loading ? '1' : '0.4'}; cursor:${canNext() && !state.loading ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2 shadow-lg">
+          class="btn-animated px-4 sm:px-6 py-3 bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center justify-center gap-2 shadow-lg whitespace-nowrap">
           ${state.loading ? `
             <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-            <span>กำลังส่ง...</span>` : `
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span>ส่งแบบประเมิน</span>`}
+            <span class="text-sm sm:text-base">กำลังส่ง...</span>` : `
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <span class="text-sm sm:text-base">ส่งแบบประเมิน</span>`}
         </button>`}
     </div>`;
 
@@ -1001,36 +1001,36 @@ function SupervisorAssessment() {
   }
 
   const navigation = `
-    <div class="flex justify-between mt-10 pt-6 border-t border-slate-100">
+    <div class="grid grid-cols-2 gap-3 mt-10 pt-6 border-t border-slate-100">
       ${step === 1 ? `
         <button onclick="navigate('landing')"
-          class="btn-animated px-6 py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center gap-2 shadow-sm">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          หน้าหลัก
+          class="btn-animated px-4 sm:px-6 py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center justify-center gap-2 shadow-sm whitespace-nowrap">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="text-sm sm:text-base">หน้าหลัก</span>
         </button>` : `
         <button onclick="setState({step: ${step - 1}})"
-          class="btn-animated px-6 py-3 border-2 border-gray-400 bg-gray-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center gap-2">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          ย้อนกลับ
+          class="btn-animated px-4 sm:px-6 py-3 border-2 border-gray-400 bg-gray-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center justify-center gap-2 whitespace-nowrap">
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+          <span class="text-sm sm:text-base">ย้อนกลับ</span>
         </button>`}
       ${step < 4 ? `
         <button id="nextBtn"
           onclick="if(canNextGlobal()) setState({step: ${step + 1}})"
           ${!canNext() ? 'disabled' : ''}
           style="opacity:${canNext() ? '1' : '0.4'}; cursor:${canNext() ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center gap-2 shadow-lg">
-          <span>ถัดไป</span>
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+          class="btn-animated px-4 sm:px-6 py-3 bg-primary-600 text-white rounded-lg hover:bg-primary-700 flex items-center justify-center gap-2 shadow-lg whitespace-nowrap">
+          <span class="text-sm sm:text-base">ถัดไป</span>
+          <svg class="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
         </button>` : `
         <button id="nextBtn"
           onclick="if(canNextGlobal()) submitForm('supervisor', state.formData)"
           ${!canNext() || state.loading ? 'disabled' : ''}
           style="opacity:${canNext() && !state.loading ? '1' : '0.4'}; cursor:${canNext() && !state.loading ? 'pointer' : 'not-allowed'}"
-          class="btn-animated px-5 py-2.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center gap-2 shadow-lg">
+          class="btn-animated px-4 sm:px-5 py-2.5 text-sm bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center justify-center gap-2 shadow-lg whitespace-nowrap">
           ${state.loading ? `
             <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
             <span>กำลังส่ง...</span>` : `
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
             <span>ส่งแบบประเมิน</span>`}
         </button>`}
     </div>`;
@@ -1118,22 +1118,22 @@ function SatisfactionForm() {
             </div>` : ''}
 
           <!-- Navigation -->
-          <div class="flex justify-between mt-10 pt-6 border-t border-gray-100">
+          <div class="grid grid-cols-2 gap-3 mt-10 pt-6 border-t border-gray-100">
             <button onclick="navigate('landing')"
-            class="btn-animated px-6 py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center gap-2 shadow-sm">
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          หน้าหลัก
+            class="btn-animated px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center justify-center gap-1.5 sm:gap-2 shadow-sm whitespace-nowrap">
+            <svg class="w-3.5 h-3.5 sm:w-4 sm:h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+          <span class="text-xs sm:text-sm md:text-base">หน้าหลัก</span>
             </button>
             <button id="satisfactionSubmitBtn"
               onclick="if(_canSatisfactionSubmit()) submitForm('satisfaction', state.formData)"
               ${!canSubmit || state.loading ? 'disabled' : ''}
               style="opacity:${canSubmit && !state.loading ? '1' : '0.4'}; cursor:${canSubmit && !state.loading ? 'pointer' : 'not-allowed'}"
-              class="btn-animated px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2 shadow-lg">
+              class="btn-animated px-3 sm:px-4 md:px-6 py-2.5 sm:py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center justify-center gap-1.5 sm:gap-2 shadow-lg whitespace-nowrap">
               ${state.loading ? `
-                <div class="spinner w-4 h-4 border-2 border-white border-t-transparent rounded-full"></div>
-                <span>กำลังส่ง...</span>` : `
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-                <span>ส่งแบบประเมิน</span>`}
+                <div class="spinner w-3.5 h-3.5 sm:w-4 sm:h-4 border-2 border-white border-t-transparent rounded-full"></div>
+                <span class="text-xs sm:text-sm md:text-base">กำลังส่ง...</span>` : `
+                <svg class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+                <span class="text-xs sm:text-sm md:text-base">ส่งแบบประเมิน</span>`}
             </button>
           </div>
         </div>
