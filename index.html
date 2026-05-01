@@ -573,34 +573,34 @@ function Landing() {
               </div>
             </div>
             <!-- CTA Buttons -->
-            <div class="flex flex-wrap gap-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
               <button onclick="navigate('self')"
-                class="group btn-animated px-8 py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl hover:shadow-xl shadow-lg shadow-primary-900/20 flex items-center gap-3 hover-lift font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="group btn-animated px-4 sm:px-6 md:px-8 py-3 md:py-4 bg-gradient-to-r from-primary-600 to-primary-500 text-white rounded-xl hover:shadow-xl shadow-lg shadow-primary-900/20 flex items-center justify-center gap-2 md:gap-3 hover-lift font-medium">
+                <svg class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                 </svg>
-                <span>1. แบบประเมินตนเอง     </span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="text-sm sm:text-base whitespace-nowrap">1. แบบประเมินตนเอง</span>
+                <svg class="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
               <button onclick="navigate('supervisor')"
-                class="group btn-animated px-8 py-4 bg-white border-2 border-primary-600 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white hover:shadow-xl shadow-lg flex items-center gap-3 hover-lift font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="group btn-animated px-4 sm:px-6 md:px-8 py-3 md:py-4 bg-white border-2 border-primary-600 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white hover:shadow-xl shadow-lg flex items-center justify-center gap-2 md:gap-3 hover-lift font-medium">
+                <svg class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                 </svg>
-                <span>2. แบบประเมินจากหน่วยงาน</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="text-sm sm:text-base whitespace-nowrap">2. <span class="hidden sm:inline">แบบประเมิน</span>จากหน่วยงาน</span>
+                <svg class="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
               <button onclick="navigate('satisfaction')"
-                class="group btn-animated px-8 py-4 bg-white border-2 border-primary-600 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white hover:shadow-xl shadow-lg flex items-center gap-3 hover-lift font-medium">
-                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                class="group btn-animated px-4 sm:px-6 md:px-8 py-3 md:py-4 bg-white border-2 border-primary-600 text-primary-600 rounded-xl hover:bg-primary-600 hover:text-white hover:shadow-xl shadow-lg flex items-center justify-center gap-2 md:gap-3 hover-lift font-medium">
+                <svg class="w-4 h-4 md:w-5 md:h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                 </svg>
-                <span class="whitespace-nowrap">3. แบบประเมินความพึงพอใจ</span>
-                <svg class="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <span class="text-sm sm:text-base whitespace-nowrap">3. <span class="hidden sm:inline">แบบประเมิน</span>ความพึงพอใจ</span>
+                <svg class="w-3 h-3 md:w-4 md:h-4 group-hover:translate-x-1 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                 </svg>
               </button>
