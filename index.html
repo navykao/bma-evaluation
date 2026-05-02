@@ -700,7 +700,7 @@ function Step1Fields(d) {
       <div>
         <label class="block text-lg font-medium text-gray-700 mb-2">ระดับ</label>
         <select id="levelSelect" onchange="updateFieldFromInput('level', this.value); _toggleLevelOther(this.value);"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
+          class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
           <option value="">-- เลือกระดับ --</option>
           ${['ปฏิบัติงาน','ปฏิบัติการ','ชำนาญงาน','ชำนาญการ','ชำนาญการพิเศษ','อื่นๆ'].map(lv =>
             '<option value="' + lv + '" ' + (d.level === lv ? 'selected' : '') + '>' + lv + '</option>'
@@ -710,7 +710,7 @@ function Step1Fields(d) {
           <input type="text" value="${d.levelOther || ''}"
             oninput="updateFieldFromInput('levelOther', this.value)"
             placeholder="กรุณาระบุระดับ"
-            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
+            class="w-full px-3 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
         </div>
       </div>
       <!-- หน่วยงาน (บังคับ) -->
@@ -719,7 +719,7 @@ function Step1Fields(d) {
         <input type="text" value="${d.department || ''}"
           oninput="updateFieldFromInput('department', this.value)"
           placeholder="สำนัก / สำนักงานเขต"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- สังกัด (ไม่บังคับ) -->
       <div>
@@ -727,7 +727,7 @@ function Step1Fields(d) {
         <input type="text" value="${d.division || ''}"
           oninput="updateFieldFromInput('division', this.value)"
           placeholder="สำนักงาน/กอง/ฝ่าย"
-          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+          class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
       </div>
       <!-- หลักสูตร (บังคับ) -->
       <div>
@@ -933,14 +933,14 @@ function SupervisorAssessment() {
           <input type="text" value="${d.supDepartment || ''}"
             oninput="updateFieldFromInput('supDepartment', this.value)"
             placeholder="สำนัก/สำนักงานเขต/อื่นๆ"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
+            class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
         </div>
         <div>
           <label class="block text-base font-medium text-gray-700 mb-2">สังกัด</label>
           <input type="text" value="${d.supDivision || ''}"
             oninput="updateFieldFromInput('supDivision', this.value)"
             placeholder="สำนักงาน/กอง/ฝ่าย"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
+            class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"/>
         </div>
       </div>`;
 
@@ -995,7 +995,7 @@ function SupervisorAssessment() {
         <label class="block text-xl font-medium text-slate-800 mb-2">ความคิดเห็นและข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
         <textarea rows="6"
           oninput="updateFieldFromInput('overallComment', this.value)"
-          class="w-full px-3 py-4 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none placeholder:text-xm text-base"
+          class="w-full px-3 py-3 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none placeholder:text-xm text-base"
           placeholder="กรุณาระบุความคิดเห็น หากมีข้อเสนอแนะ "
         >${d.overallComment || ''}</textarea>
       </div>`;
@@ -1104,7 +1104,7 @@ function SatisfactionForm() {
               oninput="updateFieldFromInput('suggestions', this.value)"
               placeholder="กรุณาระบุ "
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"
+              class="w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-xm text-base"
             >${d.suggestions || ''}</textarea>
           </div>
 
