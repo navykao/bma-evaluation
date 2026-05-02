@@ -214,7 +214,7 @@
   /* ===== แก้ไข: Header Text ให้พอดีบรรทัดเดียวในมือถือ ===== */
   @media (max-width: 640px) {
     .header-org-text, .header-dept-text {
-      font-size: clamp(0.7rem, 3.5vw, 0.9rem) !important;
+      font-size: clamp(0.85rem, 4vw, 1rem) !important;
       line-height: 1.2 !important;
       word-wrap: break-word;
       overflow-wrap: break-word;
@@ -225,7 +225,7 @@
       line-height: 1.3 !important;
     }
     .header-sub-title {
-      font-size: clamp(0.85rem, 4vw, 1rem) !important;
+      font-size: clamp(0.7rem, 3.5vw, 0.9rem) !important;
     }
   }
 
@@ -462,12 +462,12 @@ function FormHeader(title, subtitle) {
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <div class="header-org-text text-xs sm:text-sm opacity-90 leading-tight mb-1">
+          <div class="header-org-text text-xs sm:text-sm opacity-90 leading-tight mb-2">
             กรุงเทพมหานคร · สำนักการคลัง ·<br class="sm:hidden">
             สำนักงานมาตรฐานการคลังและทรัพย์สิน
           </div>
           <div class="header-main-title font-serif text-base sm:text-lg md:text-xl font-semibold leading-tight">${title}</div>
-          <div class="header-sub-title text-xs sm:text-sm opacity-80 leading-tight mt-0.5">${subtitle}</div>
+          <div class="header-sub-title text-xs sm:text-sm opacity-90 leading-tight mt-0.5">${subtitle}</div>
         </div>
       </div>
     </div>
