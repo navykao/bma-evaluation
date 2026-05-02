@@ -925,8 +925,8 @@ function SupervisorAssessment() {
     content = `
       <div class="space-y-6">
         <div class="bg-blue-50 border-l-4 border-blue-400 p-2 rounded-lg">
-         <p class="text-sm text-blue-800">ตัวแทนหน่วยงานเป็นผู้ประเมิน</p>
-         <p class="text-xs text-red-800">(ผู้เข้ารับการฝึกอบรมห้ามประเมินตนเอง)</p>
+         <p class="text-xs text-red-800">เจ้าหน้าที่ = หัวหน้างาน/หัวหน้าฝ่าย/ข้าราชการที่อาวุโสกว่าผู้อบรม เป็นผู้ประเมินแทนหน่วยงาน</p>
+         <p class="text-xs text-red-800">หัวหน้าเจ้าหน้าที่ = ข้าราชการเทียบเท่า หรือ ผบ.ผช. เป็นผู้ประเมินแทนหน่วยงาน (พิจารณาตามความเหมาะสม)</p>
         </div>
         <div>
           <label class="block text-base font-medium text-gray-700 mb-2">หน่วยงาน</label>
@@ -1039,8 +1039,7 @@ function SupervisorAssessment() {
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
       ${FormHeader('แบบประเมินโดยหน่วยงาน',
-        `เจ้าหน้าที่  * ให้หัวหน้างาน/หัวหน้าฝ่าย/ข้าราชการที่อาวุโสกว่าผู้อบรม เป็นผู้ประเมินแทนหน่วยงาน<br>
-         หัวหน้าเจ้าหน้าที่ * ให้ข้าราชการระดับเทียบเท่า หรือตัวแทนหน่วยงาน ฯลฯ (พิจารณาตามความเหมาะสม) เป็นผู้ประเมิน` 
+        `(ผู้เข้ารับการฝึกอบรมห้ามประเมินตนเอง)` 
       )}
       <div class="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         ${ProgressBar(step, 4)}
