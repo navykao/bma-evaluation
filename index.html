@@ -673,153 +673,88 @@ function Landing() {
     </div>
   `;
 }
+
 // ============================================================
-// Supervisor Assessment Form
+// Shared Step-1 Fields (ใช้ร่วมกันระหว่าง Self & Supervisor)
 // ============================================================
-function SupervisorAssessment() {
-  const d    = state.formData;
-  const step = state.step;
-
-  function canNext() {
-    if (step === 1) return true; 
-    if (step === 2) return !!(d.k1 && d.k2 && d.k3 && d.k4 && d.k5);
-    if (step === 3) return !!(d.b1 && d.b2);
-    if (step === 4) return true; 
-  }
-
-  let content = '';
-
-  if (step === 1) {
-    content = `
-      <div class="space-y-6">
-        <div class="bg-blue-50 border-l-4 border-blue-400 p-2 rounded-lg">
-         <p class="text-xs text-red-800">เจ้าหน้าที่ * หัวหน้างาน/หัวหน้าฝ่าย/ข้าราชการที่อาวุโสกว่าผู้อบรม เป็นผู้ประเมินแทนหน่วยงาน</p>
-         <p class="text-xs text-red-800">หัวหน้าเจ้าหน้าที่ * ข้าราชการเทียบเท่า หรือ ผบ.ผช. เป็นผู้ประเมินแทนหน่วยงาน (พิจารณาตามความเหมาะสม)</p>
-        </div>
-        <div>
-          <label class="block text-base font-medium text-gray-700 mb-2">หน่วยงาน</label>
-          <input type="text" value="${d.supDepartment || ''}"
-            oninput="updateFieldFromInput('supDepartment', this.value)"
-            placeholder="สำนัก/สำนักงานเขต/อื่นๆ"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-base"/>
-        </div>
-        <div>
-          <label class="block text-base font-medium text-gray-700 mb-2">สังกัด</label>
-          <input type="text" value="${d.supDivision || ''}"
-            oninput="updateFieldFromInput('supDivision', this.value)"
-            placeholder="สำนักงาน/กอง/ฝ่าย"
-            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none text-base"/>
-        </div>
-      </div>`;
-
-  } else if (step === 2) {
-    const items = [
-      { k:'k1', label:'1. ความรู้ความเข้าใจเกี่ยวกับระเบียบ ขั้นตอนการปฏิบัติงานหลังการฝึกอบรม' },
-      { k:'k2', label:'2. นำความรู้ที่ได้รับ ไปประยุกต์ใช้ในการปฏิบัติงาน' },
-      { k:'k3', label:'3. การพัฒนาทักษะในการปฏิบัติงาน หลังการฝึกอบรม' },
-      { k:'k4', label:'4. ความตั้งใจและความกระตือรือร้น ในการปฏิบัติงานหลังผ่านการฝึกอบรม' },
-      { k:'k5', label:'5. นำแนวทางปฏิบัติที่ถูกต้อง ไปปรับใช้กับงานจัดซื้อจัดจ้างในหน่วยงาน' }
-    ];
-    content = `
-      <h2 class="text-2xl font-serif font-bold text-slate-800 mt-[-1.5rem] leading-tight">การประเมินความรู้และทักษะ</h2>
-      <p class="text-2xl text-slate-800 mb-6 whitespace-normal">ประเมินความรู้และทักษะ ของผู้เข้ารับการอบรมหลังจากเสร็จสิ้นการฝึกอบรม</p> 
-       <div class="space-y-5">
-        ${items.map(it => `
-          <div class="question-card p-6 rounded-xl border border-slate-200 shadow-sm">
-            <label class="question-title block text-slate-800 mb-3 whitespace-normal break-words leading-relaxed">${it.label}</label>
-            ${RatingScale(it.k, d[it.k] || 0)}
-          </div>`).join('')}
-        <div class="bg-amber-50 border border-amber-400 rounded-lg p-2">
-          <p class="text-xs text-red-900 leading-relaxed">
-            <strong>หมายเหตุ</strong> ตัวชี้วัด // ผู้อบรมนำความรู้ไปใช้ปฏิบัติงานได้อย่างถูกต้องในระดับปานกลาง (3 คะแนน) ขึ้นไป
-          </p>
-        </div>
-      </div>`;
-    
-  } else if (step === 3) {
-    const behavItems = [
-      { k:'b1', label:'1. ผู้ผ่านการฝึกอบรมมีการเปลี่ยนแปลง การปฏิบัติงานด้านการจัดซื้อจัดจ้างดีขึ้น' },
-      { k:'b2', label:'2. ผู้ผ่านการฝึกอบรมสามารถ นำความรู้ที่ได้รับไปถ่ายทอดให้กับผู้ร่วมงานในเบื้องต้นได้' }
-    ];
-    content = `
-      <h2 class="text-lg font-serif font-semibold text-slate-900 whitespace-normal break-words">การประเมินพฤติกรรม และการนำไปใช้ในการปฏิบัติ</h2>
-      <p class="text-lg text-slate-600 mb-6 whitespace-normal break-words">ประเมินการเปลี่ยนแปลงพฤติกรรม และการนำความรู้ไปใช้ในการปฏิบัติงาน</p>
-      <div class="space-y-5">
-        ${behavItems.map(it => `
-          <div class="question-card p-6 rounded-xl border border-slate-300 shadow-sm">
-            <label class="question-title block text-slate-800 mb-2 whitespace-normal break-words leading-relaxed">${it.label}</label>
-            ${RatingScale(it.k, d[it.k] || 0)}
-          </div>`).join('')}
-      </div>`;
-
-  } else if (step === 4) {
-    content = `
-      <h2 class="text-xl font-serif font-semibold text-slate-900 mb-0.5">ความคิดเห็นและข้อเสนอแนะ</h2>
-      <p class="text-slate-500 mb-5">ข้อเสนอแนะเกี่ยวกับการจัดฝึกอบรม</p>
-      <div>
-        <label class="block text-xl font-medium text-slate-800 mb-2">ความคิดเห็นและข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
-        <textarea rows="6"
-          oninput="updateFieldFromInput('overallComment', this.value)"
-          class="w-full px-3 py-4 border border-slate-200 rounded-lg focus:border-primary-600 focus:ring-2 focus:ring-primary-100 outline-none resize-none text-base"
-          placeholder="กรุณาระบุความคิดเห็น หากมีข้อเสนอแนะ "
-        >${d.overallComment || ''}</textarea>
-      </div>`;
-  }
-
-  const navigation = `
-    <div class="flex justify-between mt-10 pt-6 border-t border-slate-100 gap-4">
-      ${step === 1 ? `
-        <button onclick="navigate('landing')"
-          class="flex-1 btn-animated px-4 py-4 border-2 border-gray-400 bg-gray-100 text-gray-700 hover:bg-gray-200 rounded-lg flex items-center justify-center gap-2 shadow-sm font-bold text-lg">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-          <span class="whitespace-nowrap">หน้าหลัก</span>
-        </button>` : `
-        <button onclick="setState({step: ${step - 1}})"
-          class="flex-1 btn-animated px-4 py-4 border-2 border-gray-600 bg-gray-100 text-slate-600 hover:text-slate-900 hover:bg-slate-50 rounded-lg flex items-center justify-center gap-2 font-bold text-lg">
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
-          <span class="whitespace-nowrap">ย้อนกลับ</span>
-        </button>`}
-
-      ${step < 4 ? `
-        <button id="nextBtn"
-          onclick="if(canNextGlobal()) setState({step: ${step + 1}})"
-          ${!canNext() ? 'disabled' : ''}
-          style="opacity:${canNext() ? '1' : '0.4'}; cursor:${canNext() ? 'pointer' : 'not-allowed'}"
-          class="flex-1 btn-animated px-4 py-4 text-lg font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center justify-center gap-2 shadow-lg">
-          <span class="whitespace-nowrap">ถัดไป</span>
-          <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>` : `
-        <button id="nextBtn"
-          onclick="if(canNextGlobal()) submitForm('supervisor', state.formData)"
-          ${!canNext() || state.loading ? 'disabled' : ''}
-          style="opacity:${canNext() && !state.loading ? '1' : '0.4'}; cursor:${canNext() && !state.loading ? 'pointer' : 'not-allowed'}"
-          class="flex-1 btn-animated px-4 py-4 text-lg font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center justify-center gap-2 shadow-lg">
-          ${state.loading ? `
-            <div class="spinner w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
-            <span class="whitespace-nowrap">กำลังส่ง...</span>` : `
-            <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
-            <span class="whitespace-nowrap">ส่งแบบประเมิน</span>`}
-        </button>`}
-    </div>`;
-
+function Step1Fields(d) {
   return `
-    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
-      ${FormHeader('แบบประเมินโดยหน่วยงาน', '(ผู้เข้ารับการฝึกอบรมห้ามประเมินตนเอง)')}
-      <div class="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
-        ${ProgressBar(step, 4)}
-        <div class="bg-white rounded-2xl shadow-lg border border-slate-100 p-4 sm:p-8">
-          ${content}
-          ${state.error ? `
-            <div class="mt-6 p-4 bg-red-50 border border-red-200 text-red-700 rounded-lg text-sm flex items-start gap-3">
-              <svg class="w-5 h-5 flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
-                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
-              </svg>
-              <span>${state.error}</span>
-            </div>` : ''}
-          ${navigation}
+    <div class="space-y-6">
+      <!-- ชื่อ-นามสกุล (บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700 mb-2">ชื่อ - นามสกุล <span class="text-red-500">*</span></label>
+        <input type="text" value="${d.fullName || ''}"
+          oninput="updateFieldFromInput('fullName', this.value)"
+          placeholder="กรุณาระบุชื่อ - นามสกุล"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+      </div>
+      <!-- ตำแหน่ง (ไม่บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700 mb-2">ตำแหน่ง</label>
+        <input type="text" value="${d.position || ''}"
+          oninput="updateFieldFromInput('position', this.value)"
+          placeholder="เช่น นักวิขาการเงินและบัญชี"          
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+      </div>
+      <!-- ระดับ (ไม่บังคับ) + ช่องกรอกเมื่อเลือก "อื่นๆ" -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700 mb-2">ระดับ</label>
+        <select id="levelSelect" onchange="updateFieldFromInput('level', this.value); _toggleLevelOther(this.value);"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
+          <option value="">-- เลือกระดับ --</option>
+          ${['ปฏิบัติงาน','ปฏิบัติการ','ชำนาญงาน','ชำนาญการ','ชำนาญการพิเศษ','อื่นๆ'].map(lv =>
+            '<option value="' + lv + '" ' + (d.level === lv ? 'selected' : '') + '>' + lv + '</option>'
+          ).join('')}
+        </select>
+        <div id="levelOtherBox" style="display:${d.level === 'อื่นๆ' ? 'block' : 'none'}" class="mt-2">
+          <input type="text" value="${d.levelOther || ''}"
+            oninput="updateFieldFromInput('levelOther', this.value)"
+            placeholder="กรุณาระบุระดับ"
+            class="w-full px-3 py-2 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-400 focus:border-amber-400 outline-none text-base"/>
         </div>
       </div>
-    </div>`;
+      <!-- หน่วยงาน (บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700 mb-2">หน่วยงาน<span class="text-red-500">*</span></label>
+        <input type="text" value="${d.department || ''}"
+          oninput="updateFieldFromInput('department', this.value)"
+          placeholder="สำนัก / สำนักงานเขต"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+      </div>
+      <!-- สังกัด (ไม่บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-700 mb-2">สังกัด</label>
+        <input type="text" value="${d.division || ''}"
+          oninput="updateFieldFromInput('division', this.value)"
+          placeholder="สำนักงาน/กอง/ฝ่าย"
+          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm text-base"/>
+      </div>
+      <!-- หลักสูตร (บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-900 mb-2">หลักสูตรที่เข้ารับการอบรม <span class="text-red-500">*</span></label>
+        <select onchange="updateFieldFromInput('course', this.value); updateBatchOptions();"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none placeholder:text-sm">
+          <option value="">-- เลือกหลักสูตร --</option>
+          ${COURSES.map(c =>
+            '<option value="' + c.value + '" ' + (d.course === c.value ? 'selected' : '') + '>' + c.value + '</option>'
+          ).join('')}
+        </select>
+      </div>
+      <!-- รุ่นที่ (ไม่บังคับ) -->
+      <div>
+        <label class="block text-lg font-medium text-gray-900 mb-2">รุ่นที่เข้ารับการอบรม</label>
+        <select id="batchSelect"
+          class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 outline-none">
+          <option value="">-- เลือกรุ่น --</option>
+          <option value="1">รุ่นที่ 1</option>
+          <option value="2">รุ่นที่ 2</option>
+          <option value="3">รุ่นที่ 3</option>
+          <option value="4">รุ่นที่ 4</option>
+          <option value="5">รุ่นที่ 5</option>
+        </select>
+      </div>
+    </div>
+  `;
 }
 
 // Toggle ช่องกรอก "อื่นๆ" ของระดับ
@@ -828,6 +763,7 @@ function _toggleLevelOther(val) {
   if (box) box.style.display = val === 'อื่นๆ' ? 'block' : 'none';
   _updateNavButtons();
 }
+
 // ============================================================
 // Self Assessment Form
 // ============================================================
@@ -1080,7 +1016,7 @@ function SupervisorAssessment() {
           class="flex-1 btn-animated px-4 py-4 text-lg font-bold bg-emerald-600 text-white rounded-lg hover:bg-emerald-700 flex items-center justify-center gap-2 shadow-lg">
             <span class="whitespace-nowrap">ถัดไป</span>
             <svg class="w-5 h-5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
-        </button>` : ` `
+        </button>` : `
         <button id="nextBtn"
           onclick="if(canNextGlobal()) submitForm('supervisor', state.formData)"
           ${!canNext() || state.loading ? 'disabled' : ''}
@@ -1097,7 +1033,7 @@ function SupervisorAssessment() {
   return `
     <div class="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50/20 fade-in">
       ${FormHeader('แบบประเมินโดยหน่วยงาน',
-        `(ผู้เข้ารับการฝึกอบรมห้ามประเมินตนเอง)` 
+        '(ผู้เข้ารับการฝึกอบรมห้ามประเมินตนเอง)'
       )}
       <div class="max-w-4xl mx-auto px-3 sm:px-6 py-6 sm:py-10">
         ${ProgressBar(step, 4)}
@@ -1159,7 +1095,7 @@ function SatisfactionForm() {
 
           <!-- ข้อเสนอแนะ -->
           <div class="bg-gray-50 p-6 rounded-lg mt-8">
-            <label class="block ttext-xl font-medium text-gray-700 mb-2">ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
+            <label class="block text-xl font-medium text-gray-700 mb-2">ข้อเสนอแนะ <span class="text-gray-400">(ถ้ามี)</span></label>
             <textarea
               oninput="updateFieldFromInput('suggestions', this.value)"
               placeholder="กรุณาระบุ "
