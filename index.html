@@ -530,10 +530,10 @@ function Landing() {
       <div class="bg-gradient-to-r from-primary-600 to-primary-500 text-white shadow-lg">
         <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
           <div class="flex items-start gap-3">
-            <div class="w-12 h-12 rounded-full bg-white/20 backdrop-blur flex items-center justify-center">
-              <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
-              </svg>
+            <div class="w-12 h-12 rounded-full bg-white flex items-center justify-center overflow-hidden p-1">
+              <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Ccircle cx='100' cy='100' r='95' fill='none' stroke='%23059669' stroke-width='3'/%3E%3Ccircle cx='100' cy='100' r='90' fill='none' stroke='%23059669' stroke-width='2'/%3E%3Ctext x='100' y='70' text-anchor='middle' font-size='20' fill='%23059669' font-family='serif'%3Eกรุงเทพ%3C/text%3E%3Ctext x='100' y='95' text-anchor='middle' font-size='20' fill='%23059669' font-family='serif'%3Eมหานคร%3C/text%3E%3Ctext x='100' y='120' text-anchor='middle' font-size='16' fill='%23059669' font-family='serif'%3Eพัฒนาคน%3C/text%3E%3C/svg%3E" 
+                   alt="กรุงเทพมหานคร" 
+                   class="w-full h-full object-contain">
             </div>
             <div class="pt-1">
               <div class="font-serif leading-tight text-xs md:text-base whitespace-nowrap">สำนักงานมาตรฐานการคลังและทรัพย์สิน</div>
@@ -814,22 +814,62 @@ function SelfAssessment() {
   } else if (step === 3) {
     const options = ['นำมาใช้ทั้งหมด','นำมาใช้ค่อนข้างมาก','นำมาใช้เฉพาะงานที่รับผิดชอบ','นำมาใช้น้อยมาก','ยังไม่เคยนำมาใช้เลย'];
     content = `
-      <div class="space-y-4">
-        <div class="bg-white border border-red-200 rounded-lg p-6">
-          <div class="font-lg text-gray-900 mb-4">
-            หลังการฝึกอบรม ท่านได้นำความรู้เกี่ยวกับการจัดซื้อจัดจ้าง การบริหารพัสดุ และการป้องกันการทุจริต กลับไปปฏิบัติในหน่วยงาน
-          </div>
-          <div class="space-y-2">
-            ${options.map(opt => `
-              <label class="flex items-center gap-3 p-4 border-2 rounded-lg cursor-pointer" style="transition:background 0.15s,border-color 0.15s" onmouseover="this.style.background='#f0fdf4'" onmouseout="this.style.background=''" class="${d.a1 === opt ? 'bg-green-50 border-green-500' : 'border-gray-200'}">
-                <input type="radio" name="a1" value="${opt}" ${d.a1 === opt ? 'checked' : ''}
-                  onchange="updateFieldFromInput('a1', this.value)"
-                  class="w-5 h-5 text-green-600"/>
-                <span class="font-medium">${opt}</span>
-              </label>`).join('')}
+      <div class="space-y-6">
+        <!-- Question Header with Icon and Better Styling -->
+        <div class="bg-gradient-to-br from-emerald-50 to-green-50 border-l-4 border-emerald-500 rounded-xl p-6 shadow-sm">
+          <div class="flex items-start gap-3 mb-3">
+            <div class="flex-shrink-0 w-10 h-10 bg-emerald-500 rounded-full flex items-center justify-center shadow-md">
+              <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-gray-800 leading-snug mb-2">
+                หลังการฝึกอบรม ท่านได้นำความรู้เกี่ยวกับการจัดซื้อจัดจ้าง การบริหารพัสดุ และการป้องกันการทุจริต กลับไปปฏิบัติในหน่วยงาน
+              </h3>
+              <p class="text-sm text-gray-600 flex items-center gap-2">
+                <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                </svg>
+                กรุณาเลือกคำตอบที่ตรงกับความเป็นจริงมากที่สุด
+              </p>
+            </div>
           </div>
         </div>
-      </div>`;
+
+        <!-- Radio Options with Enhanced Design -->
+        <div class="space-y-3">
+          ${options.map((opt, idx) => `
+            <label class="question-box block relative overflow-hidden bg-white border-2 rounded-xl p-4 cursor-pointer transition-all duration-300 ${d.a1 === opt ? 'border-emerald-500 bg-emerald-50 shadow-md' : 'border-gray-200 hover:border-emerald-300 hover:bg-emerald-50/30 hover:shadow-sm'}" 
+                   style="animation: fadeInUp 0.5s ease-out ${0.3 + idx * 0.05}s backwards;">
+              <div class="flex items-center gap-4">
+                <input type="radio" 
+                       name="a1" 
+                       value="${opt}" 
+                       ${d.a1 === opt ? 'checked' : ''}
+                       onchange="updateFieldFromInput('a1', this.value); this.closest('label').parentElement.querySelectorAll('label').forEach(l => { l.classList.remove('border-emerald-500', 'bg-emerald-50', 'shadow-md'); l.classList.add('border-gray-200'); }); this.closest('label').classList.remove('border-gray-200'); this.closest('label').classList.add('border-emerald-500', 'bg-emerald-50', 'shadow-md');"
+                       class="w-5 h-5 text-emerald-600 focus:ring-2 focus:ring-emerald-500 focus:ring-offset-2 cursor-pointer"/>
+                <span class="flex-1 text-base text-gray-700 font-medium">${opt}</span>
+              </div>
+              <div class="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-emerald-400 to-emerald-600 transition-all duration-300 ${d.a1 === opt ? 'opacity-100' : 'opacity-0'}"></div>
+            </label>
+          `).join('')}
+        </div>
+      </div>
+      
+      <style>
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      </style>
+    `;
 
   } else if (step === 4) {
     content = `
