@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>สรุปผลการประเมินผลการฝึกอบรม — ฐานคำสั่ง 827 คน</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@300;400;500;600;700;800;900&family=Noto+Serif+Thai:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  @page { size: A4; margin: 0; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Sarabun', 'Noto Sans Thai', sans-serif; background: #e8e8e8; color: #1a1a2e; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  .page { width: 210mm; min-height: 297mm; margin: 10px auto; background: white; position: relative; overflow: hidden; page-break-after: always; box-shadow: 0 4px 20px rgba(0,0,0,0.15); }
+
+  /* === PAGE 1: COVER === */
+  .page1 { background: #ffffff; padding: 19px; }
+  .page1-inner { border: 2px solid #16a34a; border-radius: 6px; height: calc(297mm - 38px); display: flex; flex-direction: column; overflow: hidden; }
+
+  .p1-header { background: #dcfce7; color: #0d4f3c; padding: 22px 30px; display: flex; align-items: center; justify-content: center; gap: 14px; }
+  .logo-circle { width: 52px; height: 52px; background: rgba(22,163,74,0.12); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid #16a34a; flex-shrink: 0; }
+  .org-text { font-size: 14px; line-height: 1.5; text-align: center; }
+  .org-text strong { font-size: 16px; }
+
+  .p1-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 20px 40px; background: linear-gradient(180deg, #fafffe 0%, #f0fdf4 30%, #ffffff 100%); }
+  .badge2 { display: inline-block; background: #16a34a; color: white; border-radius: 50px; padding: 7px 22px; font-size: 12px; letter-spacing: 1.5px; margin-bottom: 18px; font-weight: 600; }
+  .hero-title2 { font-family: 'Noto Serif Thai', serif; font-size: 30px; font-weight: 700; color: #0d4f3c; line-height: 1.5; margin-bottom: 8px; }
+  .hero-sub2 { font-size: 15px; color: #374151; line-height: 1.6; }
+  .hero-divider { width: 60px; height: 3px; background: #16a34a; border-radius: 2px; margin: 18px auto; }
+  .hero-year { font-size: 13px; color: #6b7280; }
+
+  .kpi-strip2 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; padding: 0 24px; margin: 20px 0; }
+  .kpi2 { border: 2px solid #16a34a; border-radius: 12px; padding: 14px 8px; text-align: center; background: white; }
+  .kpi2 .num { font-size: 30px; font-weight: 800; color: #16a34a; line-height: 1; }
+  .kpi2 .lbl { font-size: 10.5px; color: #555; margin-top: 4px; }
+  .kpi2 .sub { font-size: 9px; color: #999; margin-top: 2px; }
+  .kpi2.highlight .num { color: #16a34a; }
+
+  .p1-info { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-top: 1px solid #d1fae5; }
+  .info-box { padding: 16px 24px; font-size: 11.5px; line-height: 1.7; color: #374151; }
+  .info-box:first-child { border-right: 1px solid #d1fae5; }
+  .info-box h4 { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: #16a34a; margin-bottom: 6px; font-weight: 700; }
+
+  .p1-footer { padding: 10px 24px; font-size: 9.5px; color: #9ca3af; text-align: center; border-top: 1px solid #e5e7eb; }
+
+  /* === SHARED INNER PAGE STYLES === */
+  .page-inner { border: 2px solid #16a34a; border-radius: 6px; height: calc(297mm - 38px); padding: 22px 24px; display: flex; flex-direction: column; }
+  .page-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .page-top h1 { font-family: 'Noto Serif Thai', serif; font-size: 15px; font-weight: 700; color: #0d4f3c; }
+  .page-top .pnum { font-size: 10px; color: #999; }
+
+  .stat-highlight2 { display: flex; align-items: center; gap: 14px; background: #f0fdf4; border: 1.5px solid #bbf7d0; border-radius: 10px; padding: 12px 16px; margin-bottom: 14px; }
+  .stat-highlight2 .big { font-size: 32px; font-weight: 900; color: #16a34a; }
+  .stat-highlight2 .desc { font-size: 11.5px; color: #333; line-height: 1.5; }
+
+  .kirk-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .kirk { border-radius: 12px; padding: 13px 14px; color: white; position: relative; overflow: hidden; }
+  .kirk .bg-num { position: absolute; right: 10px; top: 4px; font-size: 30px; font-weight: 900; opacity: 0.15; }
+  .kirk h4 { font-size: 12px; font-weight: 700; margin-bottom: 3px; }
+  .kirk .sc { font-size: 22px; font-weight: 800; }
+  .kirk .dt { font-size: 9.5px; opacity: 0.85; margin-top: 3px; line-height: 1.3; }
+
+  .sec-hdr { display: flex; align-items: center; gap: 8px; margin: 10px 0 8px; }
+  .sec-dot { width: 8px; height: 8px; border-radius: 2px; }
+  .sec-hdr h3 { font-size: 13px; font-weight: 700; color: #0d4f3c; }
+  .sec-hdr .ln { flex: 1; height: 1px; background: linear-gradient(to right, #bbf7d0, transparent); }
+
+  .sbar { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .sbar .lb { font-size: 9.5px; color: #555; width: 90px; text-align: right; flex-shrink: 0; }
+  .sbar .bg { flex: 1; height: 14px; background: #f0f0f0; border-radius: 7px; overflow: hidden; }
+  .sbar .fl { height: 100%; border-radius: 7px; }
+  .sbar .vl { font-size: 10.5px; font-weight: 700; width: 30px; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .note-box { background: #fffbeb; border: 1px solid #fde68a; border-radius: 8px; padding: 8px 10px; font-size: 9.5px; color: #92400e; line-height: 1.5; margin-top: 6px; }
+
+  .pg-footer { background: linear-gradient(90deg, #0d4f3c, #16a34a); color: white; padding: 7px 16px; font-size: 9px; display: flex; justify-content: space-between; border-radius: 4px; margin-top: 8px; }
+
+  /* === TABLE === */
+  .btable { width: 100%; border-collapse: collapse; font-size: 10.5px; margin-bottom: 12px; }
+  .btable th { background: #0d4f3c; color: white; padding: 7px 8px; font-weight: 600; text-align: center; }
+  .btable td { padding: 6px 8px; text-align: center; border-bottom: 1px solid #e5e7eb; }
+  .btable tr:nth-child(even) td { background: #f8faf9; }
+  .btable tr:last-child td { font-weight: 700; background: #dcfce7; }
+
+  .abar { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; }
+  .abar .al { font-size: 9.5px; width: 100px; text-align: right; color: #555; flex-shrink: 0; }
+  .abar .aw { flex: 1; height: 20px; background: #f0f0f0; border-radius: 10px; overflow: hidden; }
+  .abar .ai { height: 100%; border-radius: 10px; display: flex; align-items: center; padding-left: 8px; font-size: 9.5px; font-weight: 600; color: white; }
+  .abar .ap { font-size: 10.5px; font-weight: 700; width: 38px; }
+
+  .kpi3-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .kpi3 { border-radius: 10px; padding: 12px; text-align: center; border: 1.5px solid; }
+  .kpi3 .t { font-size: 9.5px; margin-bottom: 4px; }
+  .kpi3 .n { font-size: 26px; font-weight: 900; line-height: 1; }
+  .kpi3 .s { font-size: 9px; margin-top: 3px; }
+  .kpi3 .ic { font-size: 16px; margin-top: 3px; }
+
+  .cbox { border-radius: 10px; padding: 14px 16px; margin-bottom: 10px; }
+  .cbox h3 { font-size: 13px; margin-bottom: 6px; }
+  .cbox p, .cbox ul { font-size: 11px; line-height: 1.7; }
+  .cbox ul { padding-left: 16px; }
+
+  /* === PAGE 4: DEEP ANALYSIS === */
+  .mini-table { width: 100%; border-collapse: collapse; font-size: 9.5px; margin-bottom: 10px; }
+  .mini-table th { background: #f0fdf4; color: #0d4f3c; padding: 5px 6px; font-weight: 600; text-align: center; border-bottom: 2px solid #16a34a; }
+  .mini-table td { padding: 4px 6px; text-align: center; border-bottom: 1px solid #e5e7eb; font-size: 9.5px; }
+  .mini-table tr:last-child td { font-weight: 700; background: #f0fdf4; }
+
+  .insight-card { background: white; border-radius: 10px; padding: 12px 14px; border: 1.5px solid #e5e7eb; margin-bottom: 8px; }
+  .insight-card h4 { font-size: 11px; font-weight: 700; color: #0d4f3c; margin-bottom: 4px; display: flex; align-items: center; gap: 6px; }
+  .insight-card p { font-size: 10px; line-height: 1.6; color: #374151; }
+  .insight-num { font-size: 20px; font-weight: 900; color: #16a34a; }
+
+  .radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+  .radar-item { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: #fafafa; border-radius: 8px; }
+  .radar-item .ri-label { font-size: 9px; color: #555; flex: 1; }
+  .radar-item .ri-bar { width: 80px; height: 8px; background: #e5e7eb; border-radius: 4px; overflow: hidden; }
+  .radar-item .ri-fill { height: 100%; border-radius: 4px; }
+  .radar-item .ri-val { font-size: 10px; font-weight: 700; width: 28px; text-align: right; }
+
+  .highlight-strip { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+  .hs-card { border-radius: 10px; padding: 10px 12px; text-align: center; }
+  .hs-card .hs-icon { font-size: 18px; margin-bottom: 2px; }
+  .hs-card .hs-num { font-size: 22px; font-weight: 900; line-height: 1.1; }
+  .hs-card .hs-label { font-size: 9px; margin-top: 2px; }
+
+  @media print {
+    body { background: white; }
+    .page { box-shadow: none; margin: 0; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ==================== PAGE 1: COVER ==================== -->
+<div class="page page1">
+  <div class="page1-inner">
+    <div class="p1-header">
+      <div class="logo-circle">🏛️</div>
+      <div class="org-text">
+        <strong>สำนักงานมาตรฐานการคลังและทรัพย์สิน</strong><br>
+        สำนักการคลัง กรุงเทพมหานคร
+      </div>
+    </div>
+
+    <div class="p1-body">
+      <div class="badge2">📊 TRAINING EVALUATION REPORT</div>
+      <h1 class="hero-title2">สรุปผลการประเมิน<br>โครงการฝึกอบรม</h1>
+      <p class="hero-sub2">ข้าราชการที่ปฏิบัติงานด้านการจัดซื้อจัดจ้าง<br>และการบริหารพัสดุภาครัฐ</p>
+      <div class="hero-divider"></div>
+      <p class="hero-year">ปีงบประมาณ พ.ศ. ๒๕๖๙ | Kirkpatrick's Four-Level Model</p>
+    </div>
+
+    <div class="kpi-strip2">
+      <div class="kpi2">
+        <div class="num">821</div>
+        <div class="lbl">ผู้ทำแบบประเมิน</div>
+        <div class="sub">จาก 827 คน (99.27%)</div>
+      </div>
+      <div class="kpi2">
+        <div class="num">4.21</div>
+        <div class="lbl">คะแนนเฉลี่ยรวม</div>
+        <div class="sub">จากเต็ม 5 คะแนน</div>
+      </div>
+      <div class="kpi2 highlight">
+        <div class="num">99.27%</div>
+        <div class="lbl">KPI ผลผลิต</div>
+        <div class="sub">821/827 ผ่านเกณฑ์ ≥3.00</div>
+      </div>
+      <div class="kpi2">
+        <div class="num">5</div>
+        <div class="lbl">รุ่นการอบรม</div>
+        <div class="sub">หัวหน้า + เจ้าหน้าที่</div>
+      </div>
+    </div>
+
+    <div class="p1-info">
+      <div class="info-box">
+        <h4>📖 หลักสูตรที่อบรม</h4>
+        • พ.ร.บ. การจัดซื้อจัดจ้างและการบริหารพัสดุภาครัฐ พ.ศ. 2560<br>
+        • ระเบียบกระทรวงการคลังว่าด้วยการจัดซื้อจัดจ้างฯ พ.ศ. 2560<br>
+        • อำนาจหน้าที่สำนักงาน ป.ป.ช. และการป้องกันการทุจริต
+      </div>
+      <div class="info-box">
+        <h4>🎯 กรอบแนวคิดการประเมิน</h4>
+        • Level 1: Reactions — ความพึงพอใจ<br>
+        • Level 2: Learning — ความรู้ที่ได้รับ<br>
+        • Level 3: Behavior — การนำไปใช้ปฏิบัติ<br>
+        • Level 4: Results — ผลกระทบต่อองค์กร
+      </div>
+    </div>
+
+    <div class="p1-footer">สำนักงานมาตรฐานการคลังและทรัพย์สิน สำนักการคลัง กรุงเทพมหานคร — พฤษภาคม ๒๕๖๙</div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 2: KIRKPATRICK ANALYSIS ==================== -->
+<div class="page" style="padding:19px;">
+  <div class="page-inner">
+    <div class="page-top">
+      <h1>📈 วิเคราะห์ผลการประเมิน — Kirkpatrick's Model</h1>
+      <div class="pnum">หน้า 2/4</div>
+    </div>
+
+    <div class="stat-highlight2">
+      <div class="big">4.21</div>
+      <div class="desc">คะแนนเฉลี่ยรวมจากผู้ประเมิน <strong>821 คน</strong> จากผู้เข้าอบรมตามคำสั่ง <strong>827 คน</strong> (99.27%) ผ่านเกณฑ์ทุกคนที่ประเมิน <strong>821/827 = 99.27%</strong> เกณฑ์ผ่าน ≥3.00 จากคะแนนเต็ม 5</div>
+    </div>
+
+    <div class="kirk-grid">
+      <div class="kirk" style="background:linear-gradient(135deg,#f59e0b,#d97706);"><div class="bg-num">1</div><h4>🎯 REACTIONS — ปฏิกิริยา</h4><div class="sc">4.17</div><div class="dt">ความพึงพอใจต่อการอบรม s1-s8</div></div>
+      <div class="kirk" style="background:linear-gradient(135deg,#3b82f6,#2563eb);"><div class="bg-num">2</div><h4>📚 LEARNING — การเรียนรู้</h4><div class="sc">4.30</div><div class="dt">ความรู้ความเข้าใจ k1-k4</div></div>
+      <div class="kirk" style="background:linear-gradient(135deg,#22c55e,#16a34a);"><div class="bg-num">3</div><h4>💼 BEHAVIOR — พฤติกรรม</h4><div class="sc">4.16</div><div class="dt">การเปลี่ยนแปลงพฤติกรรม k1-k5, b1-b2</div></div>
+      <div class="kirk" style="background:linear-gradient(135deg,#a855f7,#7c3aed);"><div class="bg-num">4</div><h4>🏆 RESULTS — ผลลัพธ์</h4><div class="sc">83.3%</div><div class="dt">นำไปใช้ทั้งหมด+ค่อนข้างมาก 689/827 คน</div></div>
+    </div>
+
+    <div class="sec-hdr"><div class="sec-dot" style="background:#7c3aed;"></div><h3>Level 2: แบบประเมินตนเอง (k1-k4) เฉลี่ย 4.30</h3><div class="ln"></div></div>
+    <div class="sbar"><div class="lb">k1: ระเบียบจัดซื้อ</div><div class="bg"><div class="fl" style="width:84.2%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div><div class="vl" style="color:#7c3aed;">4.21</div></div>
+    <div class="sbar"><div class="lb">k2: นำมาปรับใช้</div><div class="bg"><div class="fl" style="width:86.6%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div><div class="vl" style="color:#7c3aed;">4.33</div></div>
+    <div class="sbar"><div class="lb">k3: วิธีจัดซื้อจัดจ้าง</div><div class="bg"><div class="fl" style="width:87.6%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div><div class="vl" style="color:#7c3aed;">4.38</div></div>
+    <div class="sbar"><div class="lb">k4: อำนาจ ป.ป.ช.</div><div class="bg"><div class="fl" style="width:86.0%;background:linear-gradient(90deg,#7c3aed,#a78bfa);"></div></div><div class="vl" style="color:#7c3aed;">4.30</div></div>
+
+    <div class="sec-hdr" style="margin-top:10px;"><div class="sec-dot" style="background:#f59e0b;"></div><h3>Level 3: แบบประเมินโดยหน่วยงาน (k1-k5, b1-b2)</h3><div class="ln"></div></div>
+    <div class="grid2">
+      <div>
+        <div class="sbar"><div class="lb" style="width:80px;">k1: ความรู้ขั้นตอน</div><div class="bg"><div class="fl" style="width:82.2%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="vl" style="color:#d97706;">4.11</div></div>
+        <div class="sbar"><div class="lb" style="width:80px;">k2: ประยุกต์ใช้</div><div class="bg"><div class="fl" style="width:84.2%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="vl" style="color:#d97706;">4.21</div></div>
+        <div class="sbar"><div class="lb" style="width:80px;">k3: พัฒนาทักษะ</div><div class="bg"><div class="fl" style="width:85.0%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="vl" style="color:#d97706;">4.25</div></div>
+        <div class="sbar"><div class="lb" style="width:80px;">k4: ความตั้งใจ</div><div class="bg"><div class="fl" style="width:83.2%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="vl" style="color:#d97706;">4.16</div></div>
+        <div class="sbar"><div class="lb" style="width:80px;">k5: นำไปปรับใช้</div><div class="bg"><div class="fl" style="width:81.8%;background:linear-gradient(90deg,#f59e0b,#fbbf24);"></div></div><div class="vl" style="color:#d97706;">4.09</div></div>
+      </div>
+      <div>
+        <div class="sbar"><div class="lb" style="width:80px;">b1: เปลี่ยนแปลง</div><div class="bg"><div class="fl" style="width:82.6%;background:linear-gradient(90deg,#ea580c,#f97316);"></div></div><div class="vl" style="color:#ea580c;">4.13</div></div>
+        <div class="sbar"><div class="lb" style="width:80px;">b2: ถ่ายทอด</div><div class="bg"><div class="fl" style="width:83.8%;background:linear-gradient(90deg,#ea580c,#f97316);"></div></div><div class="vl" style="color:#ea580c;">4.19</div></div>
+        <div class="note-box"><strong>วิเคราะห์:</strong> ผู้บังคับบัญชาประเมินว่าผู้อบรมมีทักษะที่พัฒนาขึ้น k3: พัฒนาทักษะ (4.25) และสามารถประยุกต์ใช้ความรู้ได้ดี k2: ประยุกต์ใช้ (4.21) อยู่ในระดับดี</div>
+      </div>
+    </div>
+
+    <div class="sec-hdr"><div class="sec-dot" style="background:#16a34a;"></div><h3>Level 1: ความพึงพอใจ (s1-s8) เฉลี่ย 4.17</h3><div class="ln"></div></div>
+    <div class="grid2">
+      <div>
+        <div class="sbar"><div class="lb" style="width:70px;">s1: เนื้อหา</div><div class="bg"><div class="fl" style="width:83.6%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.18</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s2: วิทยากร</div><div class="bg"><div class="fl" style="width:83.2%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.16</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s3: บรรยาย</div><div class="bg"><div class="fl" style="width:82.8%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.14</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s4: เอกสาร</div><div class="bg"><div class="fl" style="width:83.6%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.18</div></div>
+      </div>
+      <div>
+        <div class="sbar"><div class="lb" style="width:70px;">s5: ระยะเวลา</div><div class="bg"><div class="fl" style="width:83.0%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.15</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s6: สถานที่</div><div class="bg"><div class="fl" style="width:84.0%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.20</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s7: บริการ</div><div class="bg"><div class="fl" style="width:83.8%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.19</div></div>
+        <div class="sbar"><div class="lb" style="width:70px;">s8: ภาพรวม</div><div class="bg"><div class="fl" style="width:83.2%;background:linear-gradient(90deg,#16a34a,#4ade80);"></div></div><div class="vl" style="color:#16a34a;">4.16</div></div>
+      </div>
+    </div>
+
+    <div style="flex:1;"></div>
+    <div class="pg-footer"><span>สำนักงานมาตรฐานการคลังและทรัพย์สิน สำนักการคลัง กรุงเทพมหานคร</span><span>หน้า 2/4</span></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 3: SUMMARY + KPI ==================== -->
+<div class="page" style="padding:19px;">
+  <div class="page-inner">
+    <div class="page-top">
+      <h1>📋 สรุปผลและข้อเสนอแนะ</h1>
+      <div class="pnum">หน้า 3/4</div>
+    </div>
+
+    <div class="sec-hdr"><div class="sec-dot" style="background:#0d4f3c;"></div><h3>ผลการประเมินแยกตามรุ่น</h3><div class="ln"></div></div>
+    <table class="btable">
+      <tr><th>รุ่นที่</th><th>หลักสูตร</th><th>จำนวน</th><th>ผ่าน</th><th>% ผ่าน</th><th>Self</th><th>Sup</th><th>Sat</th><th>เฉลี่ยรวม</th></tr>
+      <tr><td>1</td><td>หัวหน้าเจ้าหน้าที่</td><td>150</td><td>150</td><td>100%</td><td>4.34</td><td>4.16</td><td>4.16</td><td>4.22</td></tr>
+      <tr><td>2</td><td>เจ้าหน้าที่</td><td>168</td><td>168</td><td>100%</td><td>4.28</td><td>4.18</td><td>4.18</td><td>4.22</td></tr>
+      <tr><td>3</td><td>เจ้าหน้าที่</td><td>168</td><td>168</td><td>100%</td><td>4.29</td><td>4.15</td><td>4.20</td><td>4.20</td></tr>
+      <tr><td>4</td><td>เจ้าหน้าที่</td><td>168</td><td>168</td><td>100%</td><td>4.28</td><td>4.18</td><td>4.12</td><td>4.21</td></tr>
+      <tr><td>5</td><td>เจ้าหน้าที่</td><td>167</td><td>167</td><td>100%</td><td>4.34</td><td>4.14</td><td>4.19</td><td>4.21</td></tr>
+      <tr><td colspan="2"><strong>รวมทั้งหมด</strong></td><td><strong>827</strong></td><td><strong>821</strong></td><td><strong>99.27%</strong></td><td><strong>4.30</strong></td><td><strong>4.16</strong></td><td><strong>4.17</strong></td><td><strong>4.21</strong></td></tr>
+    </table>
+
+    <div class="sec-hdr"><div class="sec-dot" style="background:#7c3aed;"></div><h3>การนำความรู้ไปใช้ในการปฏิบัติงาน</h3><div class="ln"></div></div>
+    <div class="abar"><div class="al">นำมาใช้ทั้งหมด</div><div class="aw"><div class="ai" style="width:35.1%;background:linear-gradient(90deg,#16a34a,#4ade80);">290 คน</div></div><div class="ap" style="color:#16a34a;">35.1%</div></div>
+    <div class="abar"><div class="al">ใช้ค่อนข้างมาก</div><div class="aw"><div class="ai" style="width:48.2%;background:linear-gradient(90deg,#3b82f6,#60a5fa);">399 คน</div></div><div class="ap" style="color:#3b82f6;">48.2%</div></div>
+    <div class="abar"><div class="al">ใช้เฉพาะงาน</div><div class="aw"><div class="ai" style="width:15.0%;background:linear-gradient(90deg,#f59e0b,#fbbf24);">124 คน</div></div><div class="ap" style="color:#f59e0b;">15.0%</div></div>
+    <div class="abar"><div class="al">ใช้เฉพาะเกี่ยวข้อง</div><div class="aw"><div class="ai" style="width:0.6%;background:linear-gradient(90deg,#8b5cf6,#a78bfa);">5</div></div><div class="ap" style="color:#8b5cf6;">0.6%</div></div>
+    <div class="abar"><div class="al">ใช้น้อยมาก</div><div class="aw"><div class="ai" style="width:0.4%;background:#ef4444;">3</div></div><div class="ap" style="color:#ef4444;">0.4%</div></div>
+
+    <div class="sec-hdr" style="margin-top:10px;"><div class="sec-dot" style="background:#16a34a;"></div><h3>ตัวชี้วัดผลสำเร็จ (KPI)</h3><div class="ln"></div></div>
+    <div class="kpi3-grid">
+      <div class="kpi3" style="background:#f0fdf4; border-color:#bbf7d0;"><div class="t" style="color:#166534;">ตัวชี้วัดผลผลิต (เป้า ≥80%)</div><div class="n" style="color:#16a34a;">99.27%</div><div class="s" style="color:#166534;">821/827 คน ผ่านเกณฑ์</div><div class="ic">✅</div></div>
+      <div class="kpi3" style="background:#eff6ff; border-color:#93c5fd;"><div class="t" style="color:#1e40af;">อัตราการตอบแบบประเมิน</div><div class="n" style="color:#2563eb;">99.27%</div><div class="s" style="color:#1e40af;">821/827 คน ตอบแบบประเมิน</div><div class="ic">📊</div></div>
+      <div class="kpi3" style="background:#fef9c3; border-color:#fde68a;"><div class="t" style="color:#92400e;">การนำไปใช้ (ทั้งหมด+มาก)</div><div class="n" style="color:#d97706;">83.3%</div><div class="s" style="color:#92400e;">689/827 คน นำไปใช้จริง</div><div class="ic">🎯</div></div>
+    </div>
+
+    <div class="cbox" style="background:#fef9c3; border:1px solid #fde68a;">
+      <h3 style="color:#92400e;">📝 สรุปผลการวิเคราะห์</h3>
+      <p style="color:#78350f;">ผลการประเมินโครงการฝึกอบรมข้าราชการด้านการจัดซื้อจัดจ้างฯ ตามกรอบ Kirkpatrick's Four-Level Model พบว่า จากผู้เข้าอบรมตามคำสั่ง 827 คน มีผู้ทำแบบประเมิน <strong>821 คน (99.27%) ผ่านเกณฑ์ทุกคนที่ประเมิน</strong> คะแนนเฉลี่ยรวม <strong>4.21/5.00</strong> ระดับ <strong>"ดี"</strong> ข้อที่ได้คะแนนสูงสุดในแบบประเมินตนเองคือ k3: วิธีการจัดซื้อจัดจ้าง (4.38) และในแบบประเมินโดยหน่วยงานคือ k3: พัฒนาทักษะ (4.25) สะท้อนว่าเนื้อหาตรงกับความต้องการ ผู้อบรม 83.3% (689/827) นำไปใช้ในระดับค่อนข้างมากขึ้นไป (6 คนไม่ได้ทำแบบประเมิน)</p>
+    </div>
+
+    <div class="cbox" style="background:#eff6ff; border:1px solid #93c5fd;">
+      <h3 style="color:#1e40af;">💡 ข้อเสนอแนะเชิงนโยบาย</h3>
+      <ul style="color:#1e3a5f;">
+        <li>ควรจัดอบรมต่อเนื่องทุกปี เพื่อรองรับการเปลี่ยนแปลงของกฎระเบียบ</li>
+        <li>เพิ่มกรณีศึกษา (Case Study) จากปัญหาที่พบจริงในหน่วยงาน</li>
+        <li>พัฒนาระบบติดตามผลหลังอบรม 3-6 เดือน เพื่อวัด Level 4 ชัดเจนขึ้น</li>
+        <li>ขยายผลการอบรมให้ครอบคลุมบุคลากรส่วนอื่นที่เกี่ยวข้อง</li>
+      </ul>
+    </div>
+
+    <div style="flex:1;"></div>
+    <div class="pg-footer"><span>สำนักงานมาตรฐานการคลังและทรัพย์สิน สำนักการคลัง กรุงเทพมหานคร</span><span>หน้า 3/4</span></div>
+  </div>
+</div>
+
+<!-- ==================== PAGE 4: DEEP ANALYSIS ==================== -->
+<div class="page" style="padding:19px;">
+  <div class="page-inner">
+    <div class="page-top">
+      <h1>🔬 วิเคราะห์เชิงลึก — เปรียบเทียบรายรุ่นและรายมิติ</h1>
+      <div class="pnum">หน้า 4/4</div>
+    </div>
+
+    <!-- Highlight Strip -->
+    <div class="highlight-strip">
+      <div class="hs-card" style="background:#f0fdf4;">
+        <div class="hs-icon">🏆</div>
+        <div class="hs-num" style="color:#16a34a;">k3: 4.38</div>
+        <div class="hs-label" style="color:#166534;">คะแนนสูงสุด — วิธีจัดซื้อจัดจ้าง</div>
+      </div>
+      <div class="hs-card" style="background:#fef3c7;">
+        <div class="hs-icon">📊</div>
+        <div class="hs-num" style="color:#d97706;">b1: 4.13</div>
+        <div class="hs-label" style="color:#92400e;">คะแนนต่ำสุด — เปลี่ยนแปลงพฤติกรรม</div>
+      </div>
+      <div class="hs-card" style="background:#eff6ff;">
+        <div class="hs-icon">📈</div>
+        <div class="hs-num" style="color:#2563eb;">0.25</div>
+        <div class="hs-label" style="color:#1e40af;">ช่องว่าง (Gap) สูงสุด-ต่ำสุด</div>
+      </div>
+    </div>
+
+    <!-- คะแนนเฉลี่ยรายรุ่น เปรียบเทียบ 3 มิติ -->
+    <div class="sec-hdr"><div class="sec-dot" style="background:#0d4f3c;"></div><h3>เปรียบเทียบคะแนนรายรุ่น × รายมิติ</h3><div class="ln"></div></div>
+    <table class="mini-table">
+      <tr>
+        <th rowspan="2">รุ่น</th><th rowspan="2">จำนวน</th>
+        <th colspan="4" style="background:#ede9fe; color:#5b21b6;">Self Assessment (k1-k4)</th>
+        <th colspan="3" style="background:#fef3c7; color:#92400e;">Supervisor (k,b)</th>
+        <th colspan="2" style="background:#dcfce7; color:#166534;">Satisfaction</th>
+      </tr>
+      <tr>
+        <th style="background:#ede9fe; color:#5b21b6;">k1</th><th style="background:#ede9fe; color:#5b21b6;">k2</th><th style="background:#ede9fe; color:#5b21b6;">k3</th><th style="background:#ede9fe; color:#5b21b6;">k4</th>
+        <th style="background:#fef3c7; color:#92400e;">Avg k</th><th style="background:#fef3c7; color:#92400e;">b1</th><th style="background:#fef3c7; color:#92400e;">b2</th>
+        <th style="background:#dcfce7; color:#166534;">Avg s</th><th style="background:#dcfce7; color:#166534;">รวม</th>
+      </tr>
+      <tr><td><strong>1</strong></td><td>150</td><td>4.13</td><td>4.48</td><td>4.43</td><td>4.30</td><td>4.16</td><td>4.13</td><td>4.24</td><td>4.16</td><td>4.22</td></tr>
+      <tr><td><strong>2</strong></td><td>168</td><td>4.15</td><td>4.29</td><td>4.36</td><td>4.33</td><td>4.18</td><td>4.14</td><td>4.18</td><td>4.18</td><td>4.22</td></tr>
+      <tr><td><strong>3</strong></td><td>168</td><td>4.25</td><td>4.24</td><td>4.35</td><td>4.31</td><td>4.15</td><td>4.13</td><td>4.19</td><td>4.20</td><td>4.20</td></tr>
+      <tr><td><strong>4</strong></td><td>168</td><td>4.24</td><td>4.27</td><td>4.34</td><td>4.26</td><td>4.18</td><td>4.14</td><td>4.20</td><td>4.12</td><td>4.21</td></tr>
+      <tr><td><strong>5</strong></td><td>167</td><td>4.27</td><td>4.38</td><td>4.40</td><td>4.30</td><td>4.14</td><td>4.09</td><td>4.15</td><td>4.19</td><td>4.21</td></tr>
+      <tr><td colspan="2"><strong>รวม</strong></td><td><strong>4.21</strong></td><td><strong>4.33</strong></td><td><strong>4.38</strong></td><td><strong>4.30</strong></td><td><strong>4.16</strong></td><td><strong>4.13</strong></td><td><strong>4.19</strong></td><td><strong>4.17</strong></td><td><strong>4.21</strong></td></tr>
+    </table>
+
+    <!-- Insight Cards -->
+    <div class="grid2" style="margin-bottom:10px;">
+      <div class="insight-card">
+        <h4>🔍 Self vs Supervisor Gap</h4>
+        <p>ผู้อบรมประเมินตนเอง (Self avg 4.30) สูงกว่าผู้บังคับบัญชาประเมิน (Sup avg 4.16) อยู่ <strong>0.14 คะแนน</strong> ซึ่งเป็นช่องว่างปกติในการประเมินแบบ 360 องศา แสดงว่าผู้อบรมมีความมั่นใจในความรู้ที่ได้รับ ขณะที่ผู้บังคับบัญชาต้องเห็นการนำไปปฏิบัติจริงก่อนจะให้คะแนนสูง</p>
+      </div>
+      <div class="insight-card">
+        <h4>📊 หลักสูตรหัวหน้า vs เจ้าหน้าที่</h4>
+        <p>รุ่นที่ 1 (หัวหน้าเจ้าหน้าที่) มี Self avg <strong>4.34</strong> สูงกว่ารุ่นเจ้าหน้าที่ทั่วไป (avg 4.28-4.29) เพราะหัวหน้ามีประสบการณ์พื้นฐานด้านพัสดุมาก่อน จึงเข้าใจเนื้อหาได้ลึกกว่า แต่ Supervisor score ใกล้เคียงกัน (4.14-4.18) แสดงว่าทุกรุ่นสามารถนำไปปฏิบัติได้ในระดับเดียวกัน</p>
+      </div>
+    </div>
+
+    <div class="grid2" style="margin-bottom:10px;">
+      <div class="insight-card">
+        <h4>🏆 จุดแข็ง — k3: วิธีการจัดซื้อจัดจ้าง</h4>
+        <p>ข้อ k3: วิธีการจัดซื้อจัดจ้าง ได้คะแนนสูงสุด <strong>4.38</strong> (Self) และ k3: พัฒนาทักษะ <strong>4.25</strong> (Supervisor) ทุกรุ่น สะท้อนว่าเนื้อหาเรื่องวิธีการจัดซื้อจัดจ้างและข้อควรระวังมีความชัดเจน ตรงกับความต้องการ และสามารถนำไปปฏิบัติได้ทันที ควรรักษาคุณภาพส่วนนี้ไว้ในการอบรมครั้งต่อไป</p>
+      </div>
+      <div class="insight-card">
+        <h4>🎯 จุดพัฒนา — b1: เปลี่ยนแปลงพฤติกรรม</h4>
+        <p>ข้อ b1 ได้คะแนนต่ำสุด <strong>4.13</strong> แสดงว่าการเปลี่ยนแปลงพฤติกรรมการทำงานหลังอบรมยังเป็นจุดท้าทาย เสนอให้เพิ่ม Workshop เชิงปฏิบัติ และจัด Follow-up Session หลังอบรม 3 เดือน เพื่อกระตุ้นการนำไปใช้จริง</p>
+      </div>
+    </div>
+
+    <!-- การนำไปใช้ breakdown -->
+    <div class="sec-hdr"><div class="sec-dot" style="background:#16a34a;"></div><h3>วิเคราะห์การนำไปใช้ — สัดส่วนรวม</h3><div class="ln"></div></div>
+    <div style="display:flex; gap:14px; align-items:flex-start;">
+      <div style="flex:1;">
+        <div style="background:#f0fdf4; border-radius:10px; padding:12px; text-align:center; margin-bottom:8px;">
+          <div style="font-size:11px; color:#166534; margin-bottom:4px;">นำไปใช้ระดับมาก-ทั้งหมด</div>
+          <div style="font-size:32px; font-weight:900; color:#16a34a;">83.3%</div>
+          <div style="font-size:10px; color:#166534;">689 จาก 827 คน (ตามคำสั่ง)</div>
+        </div>
+        <div style="background:#fefce8; border-radius:10px; padding:12px; text-align:center;">
+          <div style="font-size:11px; color:#92400e; margin-bottom:4px;">นำไปใช้ทุกระดับ (ไม่นับน้อยมาก)</div>
+          <div style="font-size:32px; font-weight:900; color:#d97706;">98.9%</div>
+          <div style="font-size:10px; color:#92400e;">818 จาก 827 คน (ตามคำสั่ง)</div>
+        </div>
+      </div>
+      <div style="flex:1.2;">
+        <div class="note-box" style="margin-top:0; background:#f0f9ff; border-color:#bae6fd; color:#0c4a6e;">
+          <strong>💡 ข้อสังเกต:</strong> จากผู้เข้าอบรมตามคำสั่ง 827 คน มีผู้ทำแบบประเมิน 821 คน (99.27%) โดย <strong>98.9%</strong> (818/827) นำความรู้ไปใช้ในระดับใดระดับหนึ่ง มีเพียง 3 คน (0.4%) ที่ใช้น้อยมาก และ 6 คน (0.7%) ไม่ได้ทำแบบประเมิน แสดงว่าโครงการอบรมบรรลุวัตถุประสงค์ในการถ่ายทอดความรู้สู่การปฏิบัติได้เป็นอย่างดี
+        </div>
+        <div class="note-box" style="background:#faf5ff; border-color:#e9d5ff; color:#581c87;">
+          <strong>📌 ข้อเสนอเพื่อยกระดับ:</strong> เพื่อให้สัดส่วน "นำไปใช้ทั้งหมด" (ปัจจุบัน 35.3%) เพิ่มขึ้น ควรเพิ่มเวิร์กช็อปเชิงปฏิบัติ กรณีศึกษาจากหน่วยงาน และระบบ Mentoring หลังอบรม
+        </div>
+      </div>
+    </div>
+
+    <div style="flex:1;"></div>
+    <div class="pg-footer"><span>สำนักงานมาตรฐานการคลังและทรัพย์สิน สำนักการคลัง กรุงเทพมหานคร</span><span>หน้า 4/4</span></div>
+  </div>
+</div>
+
+</body>
+</html>
